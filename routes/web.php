@@ -2,12 +2,11 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ConsentController;
 
-Route::get('/', function () {
-    return view('pages.home');
-})->name('home');
+Route::get('/', [NewsController::class, 'index'])->name('home');
 
 Route::get('/about', function () {
     return view('pages.about');
@@ -20,6 +19,10 @@ Route::get('/privacy', function () {
 Route::get('/terms', function () {
     return view('pages.terms');
 })->name('terms');
+
+Route::get('/article/{slug}', [NewsController::class, 'show'])->name('article');
+
+Route::get('/api/news', [NewsController::class, 'api'])->name('api.news');
 
 Route::post('/consent/accept', [ConsentController::class, 'accept'])->name('consent.accept');
 Route::post('/consent/decline', [ConsentController::class, 'decline'])->name('consent.decline');
