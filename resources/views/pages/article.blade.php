@@ -28,7 +28,7 @@
                         <img src="{{ asset($article->image) }}" alt="{{ $article->title }}" class="w-full aspect-video object-cover rounded-2xl shadow-lg">
                     </div>
 
-                    <div class="prose prose-lg max-w-none">
+                    <div class="prose prose-lg max-w-none md:text-xl">
                         <div class="text-gray-700 leading-relaxed whitespace-pre-line">{{ $article->content }}</div>
                         <div class="text-gray-700 leading-relaxed whitespace-pre-line">{!! $article->text !!}</div>
                     </div>
