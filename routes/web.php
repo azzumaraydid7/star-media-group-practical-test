@@ -23,7 +23,6 @@ Route::get('/terms', function () {
 })->name('terms');
 
 Route::get('/article/{slug}', [NewsController::class, 'show'])->name('article');
-Route::get('/api/related-articles/{slug}', [NewsController::class, 'relatedArticles'])->name('api.related-articles');
 
 Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');
 

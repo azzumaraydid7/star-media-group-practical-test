@@ -118,6 +118,22 @@ document.addEventListener('DOMContentLoaded', function() {
                             shownArticleIds.push(article.id);
                         }
                     });
+                } else {
+                    shownArticleIds = [];
+                    
+                    fetch(`/api/related-articles/${currentSlug}`)
+                        .then(response => response.json())
+                        .then(freshData => {
+                            if (freshData && freshData.length > 0) {
+                                updateRelatedArticles(freshData);
+                                freshData.forEach(article => {
+                                    shownArticleIds.push(article.id);
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching fresh articles:', error);
+                        });
                 }
             })
             .catch(error => {

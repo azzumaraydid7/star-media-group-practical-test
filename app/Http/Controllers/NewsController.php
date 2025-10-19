@@ -128,8 +128,8 @@ class NewsController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-        // Get previously shown article IDs from request
         $excludeIds = [$article->id];
+
         if ($request->has('exclude')) {
             $previousIds = explode(',', $request->get('exclude'));
             $previousIds = array_filter($previousIds, 'is_numeric');
@@ -139,7 +139,7 @@ class NewsController extends Controller
         $relatedArticles = News::published()
             ->whereNotIn('id', $excludeIds)
             ->inRandomOrder()
-            ->limit(3)
+            ->limit(4)
             ->get();
 
         return response()->json($relatedArticles);
