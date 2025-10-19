@@ -55,10 +55,10 @@
                                         </div>
 
                                         <div class="p-4 flex flex-col justify-between">
-                                            <h3 class="text-sm font-semibold text-gray-900 leading-snug line-clamp-2">
+                                            <h3 class="text-base font-semibold text-gray-900 leading-snug line-clamp-2">
                                                 {{ Str::limit($related->title, 30) }}
                                             </h3>
-                                            <p class="text-xs text-gray-600 mt-1 line-clamp-2">
+                                            <p class="text-sm text-gray-600 mt-1 line-clamp-2">
                                                 {{ Str::limit($related->content, 80) }}
                                             </p>
 
@@ -152,10 +152,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
 
                     <div class="p-4 flex flex-col justify-between">
-                        <h3 class="text-sm font-semibold text-gray-900 leading-snug line-clamp-2">
+                        <h3 class="text-base font-semibold text-gray-900 leading-snug line-clamp-2">
                             ${limitText(article.title, 30)}
                         </h3>
-                        <p class="text-xs text-gray-600 mt-1 line-clamp-2">
+                        <p class="text-sm text-gray-600 mt-1 line-clamp-2">
                             ${limitText(article.content, 80)}
                         </p>
 
