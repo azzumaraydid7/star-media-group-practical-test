@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\News;
 use App\Models\Category;
+use Illuminate\Support\Facades\Artisan;
 
 class NewsController extends Controller
 {
@@ -50,7 +51,7 @@ class NewsController extends Controller
         
         $randomNews = News::published()
             ->whereNotIn('id', $news->pluck('id'))
-            ->where('id', '!=', $featuredArticle->id)
+            ->where('id', '!=', $featuredArticle?->id)
             ->inRandomOrder()
             ->take(3)
             ->get();
@@ -142,5 +143,18 @@ class NewsController extends Controller
             ->get();
 
         return response()->json($relatedArticles);
+    }
+
+    /**
+     * Run database seeder
+     */
+    public function runSeed()
+    {
+        try {
+            Artisan::call('db:seed');
+            return redirect()->back()->with('success', 'Database seeded successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to seed database: ' . $e->getMessage());
+        }
     }
 }

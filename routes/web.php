@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ConsentController;
 
@@ -24,9 +25,13 @@ Route::get('/terms', function () {
 Route::get('/article/{slug}', [NewsController::class, 'show'])->name('article');
 Route::get('/api/related-articles/{slug}', [NewsController::class, 'relatedArticles'])->name('api.related-articles');
 
+Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');
+
 Route::post('/consent/accept', [ConsentController::class, 'accept'])->name('consent.accept');
 Route::post('/consent/decline', [ConsentController::class, 'decline'])->name('consent.decline');
 Route::post('/consent/validate', [ConsentController::class, 'validate'])->name('consent.validate');
+
+Route::get('/run-seed', [NewsController::class, 'runSeed'])->name('run.seed');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');

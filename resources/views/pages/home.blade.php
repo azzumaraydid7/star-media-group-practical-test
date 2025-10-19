@@ -34,9 +34,11 @@
                             emerging and developed economies bracing for adjustments. Investors are closely watching central bank
                             responses amid uncertainty.
                         </p>
-                        <button class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition transform hover:scale-105 w-max">
-                            Read Full Story →
-                        </button>
+                        <a href="{{ route('run.seed') }}" 
+                           class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition transform hover:scale-105 w-max inline-flex items-center justify-center text-center"
+                           onclick="this.classList.add('bg-gray-400', 'cursor-not-allowed'); this.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'hover:scale-105'); this.innerHTML='<svg class=\'animate-spin -ml-1 mr-3 h-5 w-5 text-white\' xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\'><circle class=\'opacity-25\' cx=\'12\' cy=\'12\' r=\'10\' stroke=\'currentColor\' stroke-width=\'4\'></circle><path class=\'opacity-75\' fill=\'currentColor\' d=\'M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\'></path></svg>Loading...'; this.style.pointerEvents='none';">
+                            <code class="font-mono bg-blue-700/30 px-2 py-1 rounded text-sm">php artisan db:seed</code>
+                        </a>
                     @endif
                 </div>
             </div>
@@ -81,7 +83,7 @@
                             </div>
                         </div>
                     @endforeach
-                     
+
                 </div>
 
                 <!-- View More Articles Button -->
@@ -133,6 +135,18 @@
                             </a>
                         @endforeach
                     </div>
+                @else
+                    <div class="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-2xl shadow-inner text-center" data-aos="fade-up" data-aos-delay="200">
+                        <div class="w-16 h-16 flex items-center justify-center bg-gray-200 text-gray-500 rounded-full mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3.75h.007v.008H12v-.008zm9-3.75a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-1">No Related Articles</h3>
+                        <p class="text-gray-500 text-sm max-w-xs">
+                            We couldn’t find any related stories at the moment. Check back soon for more updates.
+                        </p>
+                    </div>
                 @endif
             </aside>
         </section>
@@ -145,11 +159,15 @@
                     Subscribe to DailyTimes and get breaking news alerts, in-depth features, and editorial insights delivered straight to your inbox.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <input type="email" placeholder="Enter your email address" class="px-4 py-3 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-400 outline-none w-full sm:w-96">
-                    <button class="bg-white text-blue-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition">
-                        Subscribe →
-                    </button>
+                    <form id="subscriptionForm" class="flex flex-col sm:flex-row gap-4 justify-center w-full">
+                        @csrf
+                        <input type="email" id="emailInput" name="email" placeholder="Enter your email address" class="px-4 py-3 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-400 outline-none w-full sm:w-96" required>
+                        <button type="submit" id="subscribeBtn" class="bg-white text-blue-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition">
+                            Subscribe →
+                        </button>
+                    </form>
                 </div>
+                <div id="subscriptionMessage" class="mt-4 text-center hidden"></div>
             </div>
         </section>
     @endsection
@@ -255,5 +273,58 @@
         }
 
         setInterval(refreshRandomNewsWithIndicator, 60000);
+
+        // Subscription form handling
+        document.getElementById('subscriptionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = this;
+            const emailInput = document.getElementById('emailInput');
+            const subscribeBtn = document.getElementById('subscribeBtn');
+            const messageDiv = document.getElementById('subscriptionMessage');
+
+            // Disable form during submission
+            subscribeBtn.disabled = true;
+            subscribeBtn.innerHTML = 'Subscribing...';
+
+            // Get form data
+            const formData = new FormData(form);
+
+            fetch('{{ route('subscribe') }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    messageDiv.classList.remove('hidden');
+
+                    if (data.success) {
+                        messageDiv.className = 'mt-4 text-center text-green-200 bg-green-600 bg-opacity-20 px-4 py-2 rounded-lg';
+                        messageDiv.textContent = data.message;
+                        form.reset();
+                    } else {
+                        messageDiv.className = 'mt-4 text-center text-red-200 bg-red-600 bg-opacity-20 px-4 py-2 rounded-lg';
+                        messageDiv.textContent = data.message;
+                    }
+
+                    setTimeout(() => {
+                        messageDiv.classList.add('hidden');
+                    }, 5000);
+                })
+                .catch(error => {
+                    messageDiv.classList.remove('hidden');
+                    messageDiv.className = 'mt-4 text-center text-red-200 bg-red-600 bg-opacity-20 px-4 py-2 rounded-lg';
+                    messageDiv.textContent = 'Something went wrong. Please try again later.';
+                })
+                .finally(() => {
+                    // Re-enable form
+                    subscribeBtn.disabled = false;
+                    subscribeBtn.innerHTML = 'Subscribe →';
+                });
+        });
     </script>
 @endpush
