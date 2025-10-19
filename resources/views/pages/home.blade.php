@@ -63,12 +63,10 @@
                                         </span>
                                     </div>
 
-                                    <!-- Collapsed -->
                                     <p class="text-gray-600 line-clamp-3" x-show="selected !== {{ $index }}">
                                         {{ $newsItem->content }}
                                     </p>
 
-                                    <!-- Expanded -->
                                     <div x-show="selected === {{ $index }}" x-transition>
                                         <p class="text-gray-700 mt-3 leading-relaxed">
                                             {{ $newsItem->content }} Read more insights from experts worldwide
@@ -91,9 +89,9 @@
                 </h2>
 
                 @if ($randomNews->count() > 0)
-                    <div class="flex flex-col gap-6">
+                    <div id="random-news-container" class="flex flex-col gap-6">
                         @foreach ($randomNews as $randomItem)
-                            <div class="bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 overflow-hidden flex items-start gap-4 p-4 cursor-pointer hover:-translate-y-1">
+                            <a href="{{ route('article', $randomItem->slug) }}" class="bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 overflow-hidden flex items-start gap-4 p-4 cursor-pointer hover:-translate-y-1">
                                 <!-- Thumbnail -->
                                 <div class="flex-shrink-0 w-28 h-20 overflow-hidden rounded-md">
                                     <img src="{{ asset($randomItem->image) }}" alt="{{ $randomItem->title }}" class="w-full h-full object-cover">
@@ -114,12 +112,12 @@
                                         <span class="bg-gray-100 px-2 py-1 rounded-full">
                                             {{ $randomItem->read_minutes }} min read
                                         </span>
-                                        <a href="{{ route('article', $randomItem->slug) }}" class="text-blue-600 font-medium hover:underline">
+                                        <span class="text-blue-600 font-medium hover:underline">
                                             Read →
-                                        </a>
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         @endforeach
                     </div>
                 @endif
@@ -141,4 +139,105 @@
             </div>
         </section>
     </div>
+
+    <script>
+        let previousArticleIds = [];
+
+        function refreshRandomNews() {
+            let url = '/api/random-news';
+            if (previousArticleIds.length > 0) {
+                url += '?exclude=' + previousArticleIds.join(',');
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('random-news-container');
+                    if (container && data.length > 0) {
+                        previousArticleIds = data.map(article => article.id);
+                        
+                        container.style.opacity = '0';
+                        container.style.transform = 'translateY(10px)';
+                        container.style.transition = 'all 0.4s ease-in-out';
+                        
+                        setTimeout(() => {
+                            container.innerHTML = '';
+                            
+                            data.forEach((article, index) => {
+                                const articleElement = document.createElement('a');
+                                articleElement.href = `/article/${article.slug}`;
+                                articleElement.className = 'bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 overflow-hidden flex items-start gap-4 p-4 cursor-pointer hover:-translate-y-1';
+                                let image = "{{ asset('') }}" + (article.image ? article.image : 'img/default.png');
+                                
+                                articleElement.style.opacity = '0';
+                                articleElement.style.transform = 'translateY(20px)';
+                                articleElement.style.transition = 'all 0.5s ease-out';
+                                
+                                articleElement.innerHTML = `
+                                    <!-- Thumbnail -->
+                                    <div class="flex-shrink-0 w-28 h-20 overflow-hidden rounded-md">
+                                        <img src="${image}" alt="${article.title}" class="w-full h-full object-cover">
+                                    </div>
+
+                                    <!-- Text -->
+                                    <div class="flex flex-col justify-between flex-1">
+                                        <div>
+                                            <h3 class="font-semibold text-base text-gray-900 leading-tight mb-1 line-clamp-2">
+                                                ${article.title}
+                                            </h3>
+                                            <p class="text-gray-600 text-sm line-clamp-2">
+                                                ${article.content.substring(0, 80)}${article.content.length > 80 ? '...' : ''}
+                                            </p>
+                                        </div>
+
+                                        <div class="mt-2 flex items-center justify-between text-xs text-gray-500">
+                                            <span class="bg-gray-100 px-2 py-1 rounded-full">
+                                                ${article.read_minutes} min read
+                                            </span>
+                                            <span class="text-blue-600 font-medium hover:underline">
+                                                Read →
+                                            </span>
+                                        </div>
+                                    </div>
+                                `;
+                                
+                                container.appendChild(articleElement);
+                                
+                                setTimeout(() => {
+                                    articleElement.style.opacity = '1';
+                                    articleElement.style.transform = 'translateY(0)';
+                                }, 100 + (index * 150)); // Stagger animation by 150ms per item
+                            });
+                            
+                            setTimeout(() => {
+                                container.style.opacity = '1';
+                                container.style.transform = 'translateY(0)';
+                            }, 200);
+                            
+                        }, 300);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching random news:', error);
+                });
+        }
+
+        setInterval(refreshRandomNews, 5000);
+
+        function refreshRandomNewsWithIndicator() {
+            const container = document.getElementById('random-news-container');
+            if (container) {
+                container.style.opacity = '0.7';
+                container.style.transition = 'opacity 0.3s ease';
+                
+                refreshRandomNews();
+                
+                setTimeout(() => {
+                    container.style.opacity = '1';
+                }, 500);
+            }
+        }
+
+        setInterval(refreshRandomNewsWithIndicator, 60000);
+    </script>
 @endsection

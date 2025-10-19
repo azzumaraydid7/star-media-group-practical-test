@@ -31,7 +31,6 @@
                     <span class="text-blue-600">Daily</span>Times
                 </a>
                 
-                <!-- Desktop Navigation -->
                 <nav class="hidden md:flex space-x-6 text-sm font-medium">
                     <a href="{{ route('home') }}" class="hover:underline">Home</a>
                     <a href="{{ route('about') }}" class="hover:underline">About / Contact</a>
@@ -127,7 +126,6 @@
             csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         };
 
-        // Mobile menu toggle functionality
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');

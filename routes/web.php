@@ -22,8 +22,6 @@ Route::get('/terms', function () {
 
 Route::get('/article/{slug}', [NewsController::class, 'show'])->name('article');
 
-Route::get('/api/news', [NewsController::class, 'api'])->name('api.news');
-
 Route::post('/consent/accept', [ConsentController::class, 'accept'])->name('consent.accept');
 Route::post('/consent/decline', [ConsentController::class, 'decline'])->name('consent.decline');
 Route::post('/consent/validate', [ConsentController::class, 'validate'])->name('consent.validate');

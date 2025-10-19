@@ -43,7 +43,6 @@ class NewsController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-        // Get other recent articles for "Read More Articles" section
         $otherArticles = News::published()
             ->where('id', '!=', $article->id)
             ->orderBy('published_at', 'desc')
@@ -65,5 +64,33 @@ class NewsController extends Controller
             ->get();
 
         return response()->json($news);
+    }
+
+    /**
+     * Get random news articles as JSON (for AJAX requests)
+     */
+    public function randomNews(Request $request)
+    {
+        $topNewsIds = News::published()
+            ->orderBy('published_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(6)
+            ->pluck('id')->toArray();
+        
+        $excludeIds = [];
+        if ($request->has('exclude')) {
+            $excludeIds = explode(',', $request->get('exclude'));
+            $excludeIds = array_filter($excludeIds, 'is_numeric');
+        }
+        
+        $allExcludeIds = array_merge($topNewsIds, $excludeIds);
+        
+        $randomNews = News::published()
+            ->whereNotIn('id', $allExcludeIds)
+            ->inRandomOrder()
+            ->take(3)
+            ->get();
+
+        return response()->json($randomNews);
     }
 }

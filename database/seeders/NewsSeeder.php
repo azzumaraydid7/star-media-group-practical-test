@@ -166,7 +166,7 @@ class NewsSeeder extends Seeder
                 'published_at' => Carbon::now()->subHours(10),
             ],
             [
-                'title' => 'Wellness Trend 2025: Digital Detox Retreats Gain Popularity',
+                'title' => 'Digital Detox Retreats Gain Popularity',
                 'author' => 'Nora Williams',
                 'slug' => 'digital-detox-retreats-popularity',
                 'content' => 'With screen fatigue at an all-time high, digital detox retreats are emerging as a global wellness phenomenon. From Bali to the Swiss Alps, people are unplugging to reconnect with nature, mindfulness, and themselves.',
