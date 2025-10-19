@@ -4,20 +4,31 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\News;
+use App\Models\Category;
 
 class NewsController extends Controller
 {
     /**
      * Display all published news articles with pagination.
      */
-    public function allArticles()
+    public function allArticles(Request $request)
     {
-        $articles = News::published()
+        $query = News::published()
+            ->with('category')
             ->orderBy('published_at', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->paginate(12);
+            ->orderBy('created_at', 'desc');
 
-        return view('pages.articles', compact('articles'));
+        // Filter by category if provided
+        if ($request->has('category') && $request->category) {
+            $query->where('category_id', $request->category);
+        }
+
+        $articles = $query->paginate(12);
+        
+        // Get all active categories for the filter dropdown
+        $categories = Category::active()->orderBy('name')->get();
+
+        return view('pages.articles', compact('articles', 'categories'));
     }
 
     /**
@@ -56,14 +67,14 @@ class NewsController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-        $otherArticles = News::published()
+        $relatedArticles = News::published()
             ->where('id', '!=', $article->id)
             ->orderBy('published_at', 'desc')
             ->orderBy('created_at', 'desc')
             ->limit(3)
             ->get();
 
-        return view('pages.article', compact('article', 'otherArticles'));
+        return view('pages.article', compact('article', 'relatedArticles'));
     }
 
     /**

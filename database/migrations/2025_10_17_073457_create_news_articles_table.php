@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('author');
             $table->string('slug')->unique();
             $table->text('content');
+            $table->text('text');
             $table->string('image');
+            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->integer('read_minutes')->default(3);
             $table->boolean('is_published')->default(true);
             $table->timestamp('published_at')->nullable();

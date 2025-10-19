@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class News extends Model
 {
@@ -16,7 +17,9 @@ class News extends Model
         'author',
         'slug',
         'content',
+        'text',
         'image',
+        'category_id',
         'read_minutes',
         'is_published',
         'published_at',
@@ -49,5 +52,13 @@ class News extends Model
     public function getUrlAttribute()
     {
         return route('article', $this->slug);
+    }
+
+    /**
+     * Get the category that owns the news article.
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 }

@@ -24,6 +24,16 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 3,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subDays(1),
+                'category_id' => 1,
+                'text' => '<h2>The New Face of Learning</h2>
+            <p>AI is personalizing education like never before. Adaptive algorithms analyze student progress, offering real-time feedback and recommendations that match individual strengths and weaknesses.</p>
+            <ul>
+                <li>Virtual AI tutors help students master topics faster.</li>
+                <li>Automated grading systems save educators valuable time.</li>
+                <li>AI-driven analytics predict learning outcomes accurately.</li>
+            </ul>
+            <p>As schools embrace this technology, accessibility and inclusion reach new heights—especially for remote and special-needs learners worldwide.</p>
+        ',
             ],
             [
                 'title' => 'Climate Change Impact Intensifies',
@@ -34,6 +44,12 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 4,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subDays(2),
+                'category_id' => 8,
+                'text' => '<h2>Environmental Alarms Ring Louder</h2>
+            <p>Global temperatures have reached record highs, with extreme weather patterns devastating agriculture, ecosystems, and livelihoods. The Intergovernmental Panel on Climate Change warns of irreversible consequences if emissions remain unchecked.</p>
+            <blockquote>“This decade is our last chance to prevent catastrophic warming,” said Dr. Lena Hoffmann, UN climate analyst.</blockquote>
+            <p>Experts urge nations to commit to net-zero policies, prioritize renewable energy, and strengthen climate resilience at the community level.</p>
+        ',
             ],
             [
                 'title' => 'Tech Giants Face New Regulations',
@@ -44,6 +60,16 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 5,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subDays(3),
+                'category_id' => 1,
+                'text' => '<h2>Global Tech Scrutiny</h2>
+            <p>Major technology companies face unprecedented regulatory pressure. Governments are enforcing new laws demanding greater algorithmic transparency and fair data handling practices.</p>
+            <ul>
+                <li>The EU expands the scope of its Digital Services Act.</li>
+                <li>Asia introduces tighter cross-border data transfer rules.</li>
+                <li>U.S. antitrust lawsuits target market monopolies.</li>
+            </ul>
+            <p>Advocates celebrate the move as a long-overdue step to protect user rights, while critics warn of innovation slowdowns and regulatory overreach.</p>
+        ',
             ],
             [
                 'title' => 'Local Startups Thriving Post-Pandemic',
@@ -54,6 +80,11 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 3,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subDays(4),
+                'category_id' => 2,
+                'text' => '<h2>Entrepreneurship Reignited</h2>
+            <p>After years of pandemic disruptions, small businesses are bouncing back stronger. Remote collaboration and digital payment tools have empowered local entrepreneurs to expand globally.</p>
+            <p>Investors are particularly optimistic about startups in fintech, logistics, and healthtech sectors across Malaysia, Indonesia, and Thailand.</p>
+        ',
             ],
             [
                 'title' => 'Sports Events Return with Energy',
@@ -64,6 +95,11 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 2,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subDays(5),
+                'category_id' => 3,
+                'text' => '<h2>The Comeback of Live Sports</h2>
+            <p>With fans filling stadiums again, global sports revenue is surging. Enhanced broadcasting experiences with multi-angle replays and interactive features bring audiences closer to the action.</p>
+            <p>Analysts project record profits for 2025 as fan engagement hits new highs both online and in-person.</p>
+        ',
             ],
             [
                 'title' => 'Global Art Scene Reawakens',
@@ -74,16 +110,26 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 4,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subDays(6),
+                'category_id' => 4,
+                'text' => '<h2>Art in the Age of Renewal</h2>
+            <p>Global galleries are embracing digital innovation. From 3D-printed sculptures to NFT-based installations, the post-pandemic art world merges physical and virtual experiences to engage diverse audiences.</p>
+            <p>Art Basel and Venice Biennale both report record participation, signaling a creative rebirth worldwide.</p>
+        ',
             ],
             [
                 'title' => 'Hollywood Shock: A-List Couple Announces Split',
                 'author' => 'Samantha Reyes',
                 'slug' => 'hollywood-shock-couple-split',
-                'content' => 'In a surprise announcement, one of Hollywood’s most admired couples has confirmed their separation after eight years together. Fans flood social media with mixed reactions as sources hint at conflicting career paths as the main reason.',
+                'content' => 'In a surprise announcement, one of Hollywood\'s most admired couples has confirmed their separation after eight years together. Fans flood social media with mixed reactions as sources hint at conflicting career paths as the main reason.',
                 'image' => 'img/Red_Carpet_Split_Shock.png',
                 'read_minutes' => 3,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subDay(),
+                'category_id' => 4,
+                'text' => '<h2>Behind the Glamour</h2>
+            <p>The couple cited mutual respect and gratitude in their public statement. Insiders suggest that busy production schedules and differing career ambitions strained the relationship over the years.</p>
+            <p>Social media buzzed with nostalgia as fans shared their favorite moments from the pair’s celebrated career collaborations.</p>
+        ',
             ],
             [
                 'title' => 'Stock Markets Rally After Central Bank Policy Shift',
@@ -94,16 +140,26 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 6,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subDays(2),
+                'category_id' => 2,
+                'text' => '<h2>Investor Sentiment Surges</h2>
+            <p>Equities rallied across Asia and Europe following announcements that interest rate hikes may slow. Analysts noted significant gains in green energy and AI-driven technology firms.</p>
+            <p>However, inflation concerns and geopolitical uncertainty continue to cast a shadow on long-term forecasts.</p>
+        ',
             ],
             [
                 'title' => 'Fashion Week 2025: Bold Colors and Virtual Runways',
                 'author' => 'Alicia Gomez',
                 'slug' => 'fashion-week-2025-virtual-runways',
-                'content' => 'This year’s Fashion Week stunned audiences as designers merged virtual and physical experiences. Augmented reality and AI-styled collections showcased the future of couture in a post-digital world.',
+                'content' => 'This year\'s Fashion Week stunned audiences as designers merged virtual and physical experiences. Augmented reality and AI-styled collections showcased the future of couture in a post-digital world.',
                 'image' => 'img/Future_Fashion_Digital_Runway.png',
                 'read_minutes' => 4,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subDays(4),
+                'category_id' => 4,
+                'text' => '<h2>Virtual Couture Takes Center Stage</h2>
+            <p>Designers embraced technology in unprecedented ways. AR fitting rooms and holographic runways blurred the lines between physical and virtual fashion, offering interactive experiences for global audiences.</p>
+            <p>Critics praised the creativity, marking 2025 as the most futuristic Fashion Week yet.</p>
+        ',
             ],
             [
                 'title' => 'Crypto Chaos: Bitcoin Plunges 15% Overnight',
@@ -114,16 +170,11 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 5,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subHours(8),
-            ],
-            [
-                'title' => 'Celebrity Chef Caught in Restaurant Scandal',
-                'author' => 'Lina Rahman',
-                'slug' => 'celebrity-chef-restaurant-scandal',
-                'content' => 'Social media is buzzing after a viral video surfaced allegedly showing a world-famous chef mistreating staff behind the scenes. Fans call for accountability as sponsors begin distancing themselves from the brand.',
-                'image' => 'img/Chef_Scandal_Panic_Tabloid.png',
-                'read_minutes' => 3,
-                'is_published' => true,
-                'published_at' => Carbon::now()->subHours(12),
+                'category_id' => 2,
+                'text' => '<h2>Bitcoin Bloodbath</h2>
+            <p>Triggered by new crypto regulations in the U.S. and China, Bitcoin experienced its sharpest one-day drop since 2023. Investors fled to bonds and commodities amid heightened uncertainty.</p>
+            <p>Analysts advise caution as volatility remains high across digital asset markets.</p>
+        ',
             ],
             [
                 'title' => 'Tech Giants Clash Over Global Data Privacy Laws',
@@ -134,6 +185,11 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 6,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subDays(5),
+                'category_id' => 1,
+                'text' => '<h2>Corporate Power Struggle</h2>
+            <p>New data protection frameworks in Europe and Asia are forcing tech companies to localize servers and audit algorithms. This has triggered disputes between firms over compliance and interoperability.</p>
+            <p>Experts expect mergers and partnerships to navigate the evolving landscape.</p>
+        ',
             ],
             [
                 'title' => 'Oil Prices Surge Amid Middle East Tensions',
@@ -144,6 +200,10 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 5,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subHours(5),
+                'category_id' => 6,
+                'text' => '<h2>Energy Markets Under Pressure</h2>
+            <p>Escalating tensions have disrupted major oil supply routes, sending global prices soaring. Analysts warn that prolonged instability could fuel inflationary waves across developing economies.</p>
+        ',
             ],
             [
                 'title' => 'Quantum Computing Breakthrough Promises Faster AI Training',
@@ -154,6 +214,11 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 6,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subHours(3),
+                'category_id' => 7,
+                'text' => '<h2>The Quantum Leap in AI</h2>
+            <p>Quantum processors have achieved previously impossible speeds in handling parallel computations. AI models can now train in hours instead of days, drastically reducing energy consumption.</p>
+            <p>This breakthrough is expected to revolutionize industries including medicine, logistics, and weather prediction.</p>
+        ',
             ],
             [
                 'title' => 'Global Housing Market Cools as Interest Rates Peak',
@@ -164,6 +229,10 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 5,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subHours(10),
+                'category_id' => 2,
+                'text' => '<h2>Cooling Market Trends</h2>
+            <p>Mortgage rate hikes are dampening global property demand. Urban housing prices have started to stabilize, signaling potential opportunities for first-time buyers and long-term investors.</p>
+        ',
             ],
             [
                 'title' => 'Digital Detox Retreats Gain Popularity',
@@ -174,6 +243,11 @@ class NewsSeeder extends Seeder
                 'read_minutes' => 4,
                 'is_published' => true,
                 'published_at' => Carbon::now()->subHours(6),
+                'category_id' => 5,
+                'text' => '<h2>Unplug to Recharge</h2>
+            <p>Wellness tourism is on the rise, with travelers seeking balance away from constant notifications. Digital detox retreats emphasize meditation, forest therapy, and slow living experiences.</p>
+            <p>Health experts endorse the trend as a vital step toward better mental well-being in the hyperconnected era.</p>
+        ',
             ],
         ];
 
