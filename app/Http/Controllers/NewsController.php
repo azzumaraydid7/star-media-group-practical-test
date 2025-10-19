@@ -117,4 +117,30 @@ class NewsController extends Controller
 
         return response()->json($randomNews);
     }
+
+    /**
+     * Get related articles for a specific article (for AJAX requests)
+     */
+    public function relatedArticles(Request $request, $slug)
+    {
+        $article = News::published()
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        // Get previously shown article IDs from request
+        $excludeIds = [$article->id];
+        if ($request->has('exclude')) {
+            $previousIds = explode(',', $request->get('exclude'));
+            $previousIds = array_filter($previousIds, 'is_numeric');
+            $excludeIds = array_merge($excludeIds, $previousIds);
+        }
+
+        $relatedArticles = News::published()
+            ->whereNotIn('id', $excludeIds)
+            ->inRandomOrder()
+            ->limit(3)
+            ->get();
+
+        return response()->json($relatedArticles);
+    }
 }

@@ -22,6 +22,7 @@ Route::get('/terms', function () {
 })->name('terms');
 
 Route::get('/article/{slug}', [NewsController::class, 'show'])->name('article');
+Route::get('/api/related-articles/{slug}', [NewsController::class, 'relatedArticles'])->name('api.related-articles');
 
 Route::post('/consent/accept', [ConsentController::class, 'accept'])->name('consent.accept');
 Route::post('/consent/decline', [ConsentController::class, 'decline'])->name('consent.decline');
