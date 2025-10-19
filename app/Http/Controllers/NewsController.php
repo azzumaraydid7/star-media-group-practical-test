@@ -15,9 +15,23 @@ class NewsController extends Controller
         $news = News::published()
             ->orderBy('published_at', 'desc')
             ->orderBy('created_at', 'desc')
+            ->skip(1)
+            ->take(6)
             ->get();
 
-        return view('pages.home', compact('news'));
+        $featuredArticle = News::published()
+            ->orderBy('published_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->first();
+        
+        $randomNews = News::published()
+            ->whereNotIn('id', $news->pluck('id'))
+            ->where('id', '!=', $featuredArticle->id)
+            ->inRandomOrder()
+            ->take(3)
+            ->get();
+
+        return view('pages.home', compact('news', 'featuredArticle', 'randomNews'));
     }
 
     /**
