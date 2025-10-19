@@ -24,7 +24,7 @@
 </head>
 
 <body class="bg-gray-50 text-gray-900 antialiased">
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header class="bg-white shadow-sm fixed w-full top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
                 <a href="{{ route('home') }}" class="text-2xl font-bold tracking-tight text-gray-800">
@@ -85,9 +85,11 @@
         </div>
     </header>
 
-    <main class="mx-auto">
+    <main class="mx-auto pt-16">
         @yield('content')
     </main>
+    @yield('sticky')
+    @yield('content-bottom')
 
     <footer class="bg-gray-900 text-gray-300">
         <div class="max-w-7xl mx-auto px-4 py-8 grid md:grid-cols-3 gap-8">

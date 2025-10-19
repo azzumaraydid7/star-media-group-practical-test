@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ConsentController;
 
 Route::get('/', [NewsController::class, 'index'])->name('home');
+Route::get('/articles', [NewsController::class, 'allArticles'])->name('articles');
 
 Route::get('/about', function () {
     return view('pages.about');

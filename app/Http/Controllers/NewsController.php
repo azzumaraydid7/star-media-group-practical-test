@@ -8,6 +8,19 @@ use App\Models\News;
 class NewsController extends Controller
 {
     /**
+     * Display all published news articles with pagination.
+     */
+    public function allArticles()
+    {
+        $articles = News::published()
+            ->orderBy('published_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(12);
+
+        return view('pages.articles', compact('articles'));
+    }
+
+    /**
      * Display a listing of published news articles.
      */
     public function index()

@@ -2,8 +2,8 @@
 
 @section('title', 'Home')
 
-@section('content')
-    <div class="overflow-x-hidden">
+<div class="overflow-x-hidden">
+    @section('content')
         <section class="max-w-7xl mx-auto px-4 py-12">
             <div class="grid md:grid-cols-2 gap-10 items-center">
                 <div data-aos="fade-right">
@@ -41,7 +41,8 @@
                 </div>
             </div>
         </section>
-
+    @endsection
+    @section('sticky')
         <section class="max-w-7xl mx-auto px-4 py-16 flex flex-col md:flex-row md:items-start md:space-x-10">
             <div class="flex-1 border-t border-gray-100 mb-10 md:mb-0" x-data="{ selected: null }">
                 <h2 class="text-3xl font-bold mb-10 text-gray-900" data-aos="fade-up">
@@ -80,6 +81,20 @@
                             </div>
                         </div>
                     @endforeach
+                     
+                </div>
+
+                <!-- View More Articles Button -->
+                <div class="text-center mt-12" data-aos="fade-up">
+                    <a href="{{ route('articles') }}" class="inline-flex items-center bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                        </svg>
+                        View More Articles
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
                 </div>
             </div>
 
@@ -92,12 +107,10 @@
                     <div id="random-news-container" class="flex flex-col gap-6">
                         @foreach ($randomNews as $randomItem)
                             <a href="{{ route('article', $randomItem->slug) }}" class="bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 overflow-hidden flex items-start gap-4 p-4 cursor-pointer hover:-translate-y-1">
-                                <!-- Thumbnail -->
                                 <div class="flex-shrink-0 w-28 h-20 overflow-hidden rounded-md">
                                     <img src="{{ asset($randomItem->image) }}" alt="{{ $randomItem->title }}" class="w-full h-full object-cover">
                                 </div>
 
-                                <!-- Text -->
                                 <div class="flex flex-col justify-between flex-1">
                                     <div>
                                         <h3 class="font-semibold text-base text-gray-900 leading-tight mb-1 line-clamp-2">
@@ -123,7 +136,8 @@
                 @endif
             </aside>
         </section>
-
+    @endsection
+    @section('content-bottom')
         <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-20 mt-16 text-center text-white" data-aos="fade-up">
             <div class="max-w-4xl mx-auto px-6">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Stay Informed. Stay Ahead.</h2>
@@ -138,8 +152,10 @@
                 </div>
             </div>
         </section>
-    </div>
+    @endsection
+</div>
 
+@push('scripts')
     <script>
         let previousArticleIds = [];
 
@@ -155,24 +171,24 @@
                     const container = document.getElementById('random-news-container');
                     if (container && data.length > 0) {
                         previousArticleIds = data.map(article => article.id);
-                        
+
                         container.style.opacity = '0';
                         container.style.transform = 'translateY(10px)';
                         container.style.transition = 'all 0.4s ease-in-out';
-                        
+
                         setTimeout(() => {
                             container.innerHTML = '';
-                            
+
                             data.forEach((article, index) => {
                                 const articleElement = document.createElement('a');
                                 articleElement.href = `/article/${article.slug}`;
                                 articleElement.className = 'bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 overflow-hidden flex items-start gap-4 p-4 cursor-pointer hover:-translate-y-1';
                                 let image = "{{ asset('') }}" + (article.image ? article.image : 'img/default.png');
-                                
+
                                 articleElement.style.opacity = '0';
                                 articleElement.style.transform = 'translateY(20px)';
                                 articleElement.style.transition = 'all 0.5s ease-out';
-                                
+
                                 articleElement.innerHTML = `
                                     <!-- Thumbnail -->
                                     <div class="flex-shrink-0 w-28 h-20 overflow-hidden rounded-md">
@@ -200,20 +216,20 @@
                                         </div>
                                     </div>
                                 `;
-                                
+
                                 container.appendChild(articleElement);
-                                
+
                                 setTimeout(() => {
                                     articleElement.style.opacity = '1';
                                     articleElement.style.transform = 'translateY(0)';
                                 }, 100 + (index * 150)); // Stagger animation by 150ms per item
                             });
-                            
+
                             setTimeout(() => {
                                 container.style.opacity = '1';
                                 container.style.transform = 'translateY(0)';
                             }, 200);
-                            
+
                         }, 300);
                     }
                 })
@@ -229,9 +245,9 @@
             if (container) {
                 container.style.opacity = '0.7';
                 container.style.transition = 'opacity 0.3s ease';
-                
+
                 refreshRandomNews();
-                
+
                 setTimeout(() => {
                     container.style.opacity = '1';
                 }, 500);
@@ -240,4 +256,4 @@
 
         setInterval(refreshRandomNewsWithIndicator, 60000);
     </script>
-@endsection
+@endpush
