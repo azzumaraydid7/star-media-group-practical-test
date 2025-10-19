@@ -86,7 +86,6 @@
 
                 </div>
 
-                <!-- View More Articles Button -->
                 <div class="text-center mt-12" data-aos="fade-up">
                     <a href="{{ route('articles') }}" class="inline-flex items-center bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,7 +99,7 @@
                 </div>
             </div>
 
-            <aside class="w-full md:w-1/3 border-t border-gray-100 md:pl-4 md:sticky md:top-24 self-start">
+            <aside class="w-full md:w-1/3 border-t border-gray-100 md:pl-4 md:sticky md:top-24 self-start h-[38rem]">
                 <h2 class="text-3xl font-bold mb-10 text-gray-900" data-aos="fade-up">
                     You Might Also Like
                 </h2>
@@ -208,12 +207,10 @@
                                 articleElement.style.transition = 'all 0.5s ease-out';
 
                                 articleElement.innerHTML = `
-                                    <!-- Thumbnail -->
                                     <div class="flex-shrink-0 w-28 h-20 overflow-hidden rounded-md">
                                         <img src="${image}" alt="${article.title}" class="w-full h-full object-cover">
                                     </div>
 
-                                    <!-- Text -->
                                     <div class="flex flex-col justify-between flex-1">
                                         <div>
                                             <h3 class="font-semibold text-base text-gray-900 leading-tight mb-1 line-clamp-2">

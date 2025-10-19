@@ -29,7 +29,6 @@ class SubscriptionController extends Controller
                 'is_active' => true
             ]);
 
-            // Send welcome email
             Mail::to($request->email)->send(new WelcomeSubscriber($request->email));
 
             return response()->json([

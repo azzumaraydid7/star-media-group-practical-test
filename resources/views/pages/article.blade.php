@@ -28,7 +28,6 @@
                         <img src="{{ asset($article->image) }}" alt="{{ $article->title }}" class="w-full aspect-video object-cover rounded-2xl shadow-lg">
                     </div>
 
-                    <!-- Article Content -->
                     <div class="prose prose-lg max-w-none">
                         <div class="text-gray-700 leading-relaxed whitespace-pre-line">{{ $article->content }}</div>
                         <div class="text-gray-700 leading-relaxed whitespace-pre-line">{!! $article->text !!}</div>
@@ -46,7 +45,7 @@
                     </div>
 
                     @if (isset($relatedArticles) && $relatedArticles->count() > 0)
-                        <div class="mt-16">
+                        <div class="mt-16 h-[36rem] md:h-[26rem]">
                             <h2 class="text-2xl font-bold mb-8 text-gray-900">Related Articles</h2>
                             <div id="relatedArticlesContainer" class="grid md:grid-cols-2 gap-8">
                                 @foreach ($relatedArticles as $related)
