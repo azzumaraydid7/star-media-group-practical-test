@@ -14,7 +14,7 @@
 <body class="bg-gray-100">
     <!-- Navigation -->
     <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4">
+        <div class="mx-auto px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
                     <h1 class="text-xl font-bold text-gray-800">DailyTimes - Admin</h1>
