@@ -11,7 +11,7 @@
                 Trusted journalism, modern perspective — delivering stories that matter since 1999.
             </p>
         </div>
-        <div class="absolute inset-0 opacity-10 bg-[url('{{ asset('img/news_pattern.png') }}')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 opacity-15 bg-[url('{{ asset('img/news_pattern.png') }}')] bg-cover bg-center"></div>
     </section>
 
     <section class="max-w-6xl mx-auto px-6 py-20">

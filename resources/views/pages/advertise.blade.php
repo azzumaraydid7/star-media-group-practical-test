@@ -5,13 +5,13 @@
 @section('content')
 <div class="overflow-x-hidden">
     <section class="relative bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white py-16 md:py-24 w-full overflow-hidden">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center" data-aos="fade-up" data-aos-duration="1000">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center" data-aos="fade-up">
             <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Advertise With <span class="text-blue-400">DailyTimes</span></h1>
             <p class="text-blue-100 max-w-2xl mx-auto text-lg">
                 Reach millions of engaged readers with our premium advertising solutions and targeted campaigns.
             </p>
         </div>
-        <div class="absolute inset-0 opacity-10 bg-[url('{{ asset('img/news_pattern.png') }}')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 opacity-15 bg-[url('{{ asset('img/news_pattern.png') }}')] bg-cover bg-center"></div>
     </section>
 
     <section class="max-w-6xl mx-auto px-6 py-20">

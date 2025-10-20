@@ -10,6 +10,7 @@
                 Your privacy matters to us. This page explains how <span class="text-blue-400 font-semibold">DailyTimes</span> collects, uses, and protects your personal information.
             </p>
         </div>
+        <div class="absolute inset-0 opacity-15 bg-[url('{{ asset('img/news_pattern.png') }}')] bg-cover bg-center"></div>
     </section>
 
     <section class="max-w-4xl mx-auto px-6 pb-20">
