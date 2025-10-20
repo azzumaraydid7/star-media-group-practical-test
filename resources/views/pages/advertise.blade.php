@@ -61,7 +61,7 @@
                 <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition" data-aos="fade-up" data-aos-delay="100">
                     <div class="text-center mb-8">
                         <h3 class="text-2xl font-bold mb-2">Basic</h3>
-                        <div class="text-4xl font-bold text-blue-600 mb-2">$299</div>
+                        <div class="text-4xl font-bold text-blue-600 mb-2">RM 299</div>
                         <p class="text-gray-500">per month</p>
                     </div>
                     <ul class="space-y-4 mb-8">
@@ -94,7 +94,7 @@
                     </div>
                     <div class="text-center mb-8">
                         <h3 class="text-2xl font-bold mb-2">Professional</h3>
-                        <div class="text-4xl font-bold text-blue-600 mb-2">$599</div>
+                        <div class="text-4xl font-bold text-blue-600 mb-2">RM 599</div>
                         <p class="text-gray-500">per month</p>
                     </div>
                     <ul class="space-y-4 mb-8">
@@ -128,7 +128,7 @@
                 <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition" data-aos="fade-up" data-aos-delay="300">
                     <div class="text-center mb-8">
                         <h3 class="text-2xl font-bold mb-2">Enterprise</h3>
-                        <div class="text-4xl font-bold text-blue-600 mb-2">$1,299</div>
+                        <div class="text-4xl font-bold text-blue-600 mb-2">RM 1,299</div>
                         <p class="text-gray-500">per month</p>
                     </div>
                     <ul class="space-y-4 mb-8">
