@@ -25,7 +25,11 @@
                             <span class="mx-2">•</span>
                             <span>{{ $article->read_minutes }} min read</span>
                         </div>
-                        <img src="{{ asset($article->image) }}" alt="{{ $article->title }}" class="w-full aspect-video object-cover rounded-2xl shadow-lg">
+                        @if($article->image && file_exists(public_path($article->image)))
+                            <img src="{{ asset($article->image) }}" alt="{{ $article->title }}" class="w-full aspect-video object-cover rounded-2xl shadow-lg">
+                        @else
+                            <img src="{{ asset('img/default.png') }}" alt="{{ $article->title }}" class="w-full aspect-video object-cover rounded-2xl shadow-lg">
+                        @endif
                     </div>
 
                     <div class="prose prose-lg max-w-none md:text-xl">
@@ -51,7 +55,11 @@
                                 @foreach ($relatedArticles as $related)
                                     <a href="{{ route('article', $related->slug) }}" class="flex items-start bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 mb-4">
                                         <div class="w-32 h-full flex-shrink-0">
-                                            <img src="{{ asset($related->image) }}" alt="{{ $related->title }}" class="w-full h-full object-cover">
+                                            @if($related->image && file_exists(public_path($related->image)))
+                                                <img src="{{ asset($related->image) }}" alt="{{ $related->title }}" class="w-full h-full object-cover">
+                                            @else
+                                                <img src="{{ asset('img/default.png') }}" alt="{{ $related->title }}" class="w-full h-full object-cover">
+                                            @endif
                                         </div>
 
                                         <div class="p-4 flex flex-col justify-between">

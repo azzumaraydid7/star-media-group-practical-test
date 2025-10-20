@@ -37,7 +37,14 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['admin'])->group(function () {
-    Route::get('/admin/consents', [AdminController::class, 'consents'])->name('admin.consents');
-    Route::put('/admin/consents/{id}', [AdminController::class, 'updateConsent'])->name('admin.consents.update');
-    Route::delete('/admin/consents/{id}', [AdminController::class, 'deleteConsent'])->name('admin.consents.delete');
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/admin/consents', [ConsentController::class, 'consents'])->name('admin.consents');
+    Route::put('/admin/consents/{id}', [ConsentController::class, 'updateConsent'])->name('admin.consents.update');
+    Route::delete('/admin/consents/{id}', [ConsentController::class, 'deleteConsent'])->name('admin.consents.delete');
+    Route::get('/admin/articles', [AdminController::class, 'articles'])->name('admin.articles');
+    Route::get('/admin/articles/create', [AdminController::class, 'createArticle'])->name('admin.articles.create');
+    Route::post('/admin/articles', [AdminController::class, 'storeArticle'])->name('admin.articles.store');
+    Route::get('/admin/articles/{id}/edit', [AdminController::class, 'editArticle'])->name('admin.articles.edit');
+    Route::put('/admin/articles/{id}', [AdminController::class, 'updateArticle'])->name('admin.articles.update');
+    Route::delete('/admin/articles/{id}', [AdminController::class, 'deleteArticle'])->name('admin.articles.delete');
 });

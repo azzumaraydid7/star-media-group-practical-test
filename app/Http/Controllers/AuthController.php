@@ -34,7 +34,7 @@ class AuthController extends Controller
             'is_admin' => $user->is_admin,
         ]);
 
-        return redirect()->route('admin.consents');
+        return redirect()->route('dashboard');
     }
 
     public function logout(Request $request)

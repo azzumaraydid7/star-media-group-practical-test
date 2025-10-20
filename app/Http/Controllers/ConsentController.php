@@ -94,4 +94,52 @@ class ConsentController extends Controller
             ]
         ]);
     }
+
+    public function consents()
+    {
+        $records = ConsentRecord::latest()->paginate(15);
+        return view('admin.consents', compact('records'));
+    }
+
+    public function updateConsent(Request $request, $id)
+    {
+        try {
+            $record = ConsentRecord::findOrFail($id);
+            
+            $request->validate([
+                'guid' => 'required|string|max:255',
+                'accepted_at' => 'nullable|date',
+                'version' => 'required|integer|min:1'
+            ]);
+
+            $record->update([
+                'guid' => $request->guid,
+                'accepted_at' => $request->accepted_at,
+                'version' => $request->version
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Consent updated successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to update consent: ' . $e->getMessage()]);
+        }
+    }
+
+    public function deleteConsent($id)
+    {
+        try {
+            $record = ConsentRecord::findOrFail($id);
+            $record->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Record deleted successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete record: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
