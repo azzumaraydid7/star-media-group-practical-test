@@ -72,7 +72,7 @@ class NewsController extends Controller
             ->where('id', '!=', $article->id)
             ->orderBy('published_at', 'desc')
             ->orderBy('created_at', 'desc')
-            ->limit(3)
+            ->limit(4)
             ->get();
 
         return view('pages.article', compact('article', 'relatedArticles'));
@@ -99,7 +99,7 @@ class NewsController extends Controller
         $topNewsIds = News::published()
             ->orderBy('published_at', 'desc')
             ->orderBy('created_at', 'desc')
-            ->take(6)
+            ->take(7)
             ->pluck('id')->toArray();
         
         $excludeIds = [];
