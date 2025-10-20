@@ -22,6 +22,10 @@ Route::get('/terms', function () {
     return view('pages.terms');
 })->name('terms');
 
+Route::get('/advertise', function () {
+    return view('pages.advertise');
+})->name('advertise');
+
 Route::get('/article/{slug}', [NewsController::class, 'show'])->name('article');
 
 Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');

@@ -102,9 +102,9 @@
             <div>
                 <h3 class="font-semibold mb-3 text-white">Quick Links</h3>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="hover:text-white">Advertise</a></li>
-                    <li><a href="#" class="hover:text-white">Contact</a></li>
-                    <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                    <li><a href="{{ route('advertise') }}" class="hover:text-white">Advertise</a></li>
+                    <li><a href="{{ route('terms') }}" class="hover:text-white">Terms & Conditions</a></li>
+                    <li><a href="{{ route('privacy') }}" class="hover:text-white">Privacy Policy</a></li>
                 </ul>
             </div>
             <div>
