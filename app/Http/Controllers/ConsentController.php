@@ -33,13 +33,13 @@ class ConsentController extends Controller
     public function decline(Request $request)
     {
         $guid = (string) Str::uuid();
-        ConsentRecord::create([
-            'guid' => $guid,
-            'accepted_at' => null,
-            'version' => 1,
-            'ip' => $request->ip(),
-            'user_agent' => $request->header('User-Agent'),
-        ]);
+        // ConsentRecord::create([
+        //     'guid' => $guid,
+        //     'accepted_at' => null,
+        //     'version' => 1,
+        //     'ip' => $request->ip(),
+        //     'user_agent' => $request->header('User-Agent'),
+        // ]);
 
         return response()->json([
             'status' => 'declined',

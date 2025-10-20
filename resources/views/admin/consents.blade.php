@@ -119,7 +119,7 @@
                                             <input type="text" class="guid-edit hidden w-full px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->guid }}">
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="accepted-display text-sm text-gray-900">{{ Carbon\Carbon::parse($record->accepted_at)->format('h:i A - d M Y') }}</span>
+                                            <span class="accepted-display text-sm text-gray-900">{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('h:i A - d M Y') : '' }}</span>
                                             <input type="datetime-local" class="accepted-edit hidden w-full px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('h:i A - d M Y') : '' }}">
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">

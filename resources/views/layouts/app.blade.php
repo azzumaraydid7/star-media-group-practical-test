@@ -36,13 +36,10 @@
                     <a href="{{ route('about') }}" class="hover:underline">About / Contact</a>
                     <a href="{{ route('privacy') }}" class="hover:underline">Privacy Policy</a>
                     <a href="{{ route('terms') }}" class="hover:underline">Terms & Conditions</a>
-                    @if (auth()->guest())
+                    @if (!session('user_id'))
                         <a href="{{ route('login') }}" class="hover:underline">Login</a>
                     @else
-                        <form action="{{ route('logout') }}" method="POST" class="inline">
-                            @csrf
-                            <button type="submit" class="hover:underline">Logout</button>
-                        </form>
+                        <a href="{{ route('dashboard') }}" class="hover:underline">Dashboard</a>
                     @endif
                 </nav>
 
@@ -71,13 +68,10 @@
                         <a href="{{ route('about') }}" class="px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">About / Contact</a>
                         <a href="{{ route('privacy') }}" class="px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">Privacy Policy</a>
                         <a href="{{ route('terms') }}" class="px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">Terms & Conditions</a>
-                        @if (auth()->guest())
+                        @if (!session('user_id'))
                             <a href="{{ route('login') }}" class="px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">Login</a>
                         @else
-                            <form action="{{ route('logout') }}" method="POST" class="w-full">
-                                @csrf
-                                <button type="submit" class="w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">Logout</button>
-                            </form>
+                            <a href="{{ route('dashboard') }}" class="px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">Dashboard</a>
                         @endif
                     </div>
                 </div>
