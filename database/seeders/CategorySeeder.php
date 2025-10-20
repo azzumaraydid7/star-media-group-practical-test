@@ -70,6 +70,13 @@ class CategorySeeder extends Seeder
                 'color' => '#059669',
                 'is_active' => true,
             ],
+            [
+                'name' => 'World',
+                'slug' => 'world',
+                'description' => 'Global news, international events, and cross-border issues',
+                'color' => '#9333EA',
+                'is_active' => true,
+            ],
         ];
 
         foreach ($categories as $category) {
