@@ -24,7 +24,7 @@ class AuthController extends Controller
         $user = User::where('email', $credentials['email'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return back()->withErrors(['email' => 'Invalid credentials.']);
+            return back()->withErrors(['email' => 'Invalid credentials.'])->withInput($request->only(['email', 'password']));
         }
 
         // Store user info in session
