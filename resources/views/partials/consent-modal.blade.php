@@ -2,17 +2,17 @@
     .consent-modal-container {
         display: none;
     }
+
     .consent-modal-container.initialized {
         display: flex;
     }
-    [x-cloak] { display: none !important; }
+
+    [x-cloak] {
+        display: none !important;
+    }
 </style>
 
-<div x-data="consentModal()" 
-     x-show="visible" 
-     x-cloak 
-     :class="{ 'initialized': initialized }"
-     class="consent-modal-container fixed inset-0 items-center justify-center px-4 consent-overlay">
+<div id="consent-modal" x-data="consentModal()" x-show="visible" x-cloak :class="{ 'initialized': initialized }" class="consent-modal-container fixed inset-0 items-center justify-center px-4 consent-overlay">
     <div x-show="visible" x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50"></div>
 
     <div x-show="visible" x-transition @keydown.escape.window="decline()" class="bg-white rounded-xl shadow-xl max-w-2xl w-full p-6 z-50">
@@ -31,7 +31,8 @@
             <button type="button" @click="accept" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Accept</button>
         </div>
     </div>
-
+</div>
+@push('scripts')
     <script>
         function consentModal() {
             return {
@@ -59,10 +60,10 @@
                         const declined = document.cookie.split('; ').find(row => row.startsWith('site_consent_declined='));
 
                         const shouldShow = await this.shouldShowModal(accepted, declined);
-                        
+
                         this.loading = false;
                         this.initialized = true;
-                        
+
                         if (shouldShow) {
                             requestAnimationFrame(() => {
                                 requestAnimationFrame(() => {
@@ -135,18 +136,18 @@
 
                         const decodedValue = decodeURIComponent(cookieValue);
                         const declineTimestamp = new Date(decodedValue);
-                        
+
                         if (isNaN(declineTimestamp.getTime())) {
                             return true;
                         }
 
                         const expiryDate = new Date(declineTimestamp);
                         expiryDate.setDate(expiryDate.getDate() + 1);
-                        
+
                         const now = new Date();
-                        
+
                         return now >= expiryDate;
-                        
+
                     } catch (error) {
                         console.warn('Error parsing decline cookie:', error);
                         return true;
@@ -225,4 +226,93 @@
             }
         }
     </script>
-</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function createConsentModal() {
+                const modalHTML = `
+                    <div id="consent-modal" x-data="consentModal()" x-show="visible" x-cloak :class="{ 'initialized': initialized }" class="consent-modal-container fixed inset-0 items-center justify-center px-4 consent-overlay">
+                        <div x-show="visible" x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50"></div>
+
+                        <div x-show="visible" x-transition @keydown.escape.window="decline()" class="bg-white rounded-xl shadow-xl max-w-2xl w-full p-6 z-50">
+                            <h3 class="text-lg font-semibold mb-2">Privacy & Cookies</h3>
+                            <p class="text-sm text-gray-700 mb-4">
+                                Cookies are necessary for this website to function properly, for performance measurement, and to provide you with the best experience.
+                            </p>
+                            <p class="text-sm text-gray-700 mb-4">
+                                By continuing to access or use this site, you acknowledge and consent to our use of cookies in accordance with our
+                                <a href="{{ route('terms') }}" class="underline">Terms & Conditions</a> and
+                                <a href="{{ route('privacy') }}" class="underline">Privacy Statement</a>.
+                            </p>
+
+                            <div class="flex items-center space-x-3 justify-end">
+                                <button type="button" onclick="decline()" class="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200">Decline</button>
+                                <button type="button" onclick="accept()" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Accept</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+
+            function initializeAlpineData(visibility = false, initialisation = false) {
+                Alpine.data('consentModal', () => ({
+                    visible: visibility,
+                    initialized: initialisation,
+                    init() {
+                        this.initialized = true;
+                    }
+                }));
+            }
+
+            const consentModal = document.getElementById('consent-modal');
+            if (consentModal) {
+                initializeAlpineData();
+            } else {
+                createConsentModal();
+                initializeAlpineData();
+            }
+
+            setInterval(function() {
+                const acceptedCookie = document.cookie.split('; ').find(row => row.startsWith('site_consent='));
+                const declinedCookie = document.cookie.split('; ').find(row => row.startsWith('site_consent_declined='));
+                
+                if (acceptedCookie) {
+                    return;
+                }
+                
+                if (declinedCookie) {
+                    try {
+                        const cookieValue = declinedCookie.split('=')[1];
+                        if (cookieValue) {
+                            const decodedValue = decodeURIComponent(cookieValue);
+                            const declineTimestamp = new Date(decodedValue);
+                            
+                            if (!isNaN(declineTimestamp.getTime())) {
+                                const expiryDate = new Date(declineTimestamp);
+                                expiryDate.setDate(expiryDate.getDate() + 1); // 24 hours
+                                const now = new Date();
+                                
+                                if (now < expiryDate) {
+                                    return;
+                                }
+                            }
+                        }
+                    } catch (error) {
+                    }
+                }
+                
+                const modal = document.getElementById('consent-modal');
+                if (!modal) {
+                    createConsentModal();
+                    
+                    
+                    initializeAlpineData(true, true);
+                    if (window.Alpine) {
+                        Alpine.initTree(document.getElementById('consent-modal'));
+                    }
+                }
+            }, 2000);
+        });
+    </script>
+@endpush
