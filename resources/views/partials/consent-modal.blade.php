@@ -245,8 +245,8 @@
                             </p>
 
                             <div class="flex items-center space-x-3 justify-end">
-                                <button type="button" onclick="decline()" class="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200">Decline</button>
-                                <button type="button" onclick="accept()" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Accept</button>
+                                <button type="button" @click="decline" class="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200">Decline</button>
+                                <button type="button" @click="accept" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Accept</button>
                             </div>
                         </div>
                     </div>
@@ -259,8 +259,188 @@
                 Alpine.data('consentModal', () => ({
                     visible: visibility,
                     initialized: initialisation,
+                    loading: true,
                     init() {
                         this.initialized = true;
+                        this.visible = false;
+                        this.loading = true;
+
+                        window.addEventListener('consent:init', (e) => {
+                            if (e.detail && e.detail.show) {
+                                this.open();
+                            }
+                        });
+
+                        requestAnimationFrame(() => {
+                            this.initializeModalState();
+                        });
+                    },
+                    async initializeModalState() {
+                        try {
+                            const accepted = document.cookie.split('; ').find(row => row.startsWith('site_consent='));
+                            const declined = document.cookie.split('; ').find(row => row.startsWith('site_consent_declined='));
+
+                            const shouldShow = await this.shouldShowModal(accepted, declined);
+
+                            this.loading = false;
+                            this.initialized = true;
+
+                            if (shouldShow) {
+                                requestAnimationFrame(() => {
+                                    requestAnimationFrame(() => {
+                                        this.open();
+                                    });
+                                });
+                            }
+                        } catch (error) {
+                            console.error('Consent modal initialization error:', error);
+                            this.loading = false;
+                            this.initialized = true;
+                        }
+                    },
+                    async shouldShowModal(acceptedCookie, declinedCookie) {
+                        if (acceptedCookie) {
+                            const isAcceptValid = await this.validateAcceptCookie(acceptedCookie);
+                            if (isAcceptValid) {
+                                return false;
+                            }
+                        }
+
+                        return this.checkDeclineCookieExpiry(declinedCookie);
+                    },
+                    async validateAcceptCookie(acceptedCookie) {
+                        try {
+                            const cookieValue = acceptedCookie.split('=')[1];
+                            if (!cookieValue) {
+                                return false;
+                            }
+
+                            const decodedValue = decodeURIComponent(cookieValue);
+                            const payload = JSON.parse(decodedValue);
+
+                            if (!payload.guid || !payload.accepted_at || !payload.version) {
+                                return false;
+                            }
+
+                            const response = await fetch("{{ route('consent.validate') }}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': window.Laravel.csrfToken
+                                },
+                                body: JSON.stringify({
+                                    guid: payload.guid,
+                                    accepted_at: payload.accepted_at,
+                                    version: payload.version
+                                })
+                            });
+
+                            const result = await response.json();
+                            return result.valid === true;
+
+                        } catch (error) {
+                            console.warn('Error validating accept cookie:', error);
+                            return false;
+                        }
+                    },
+                    checkDeclineCookieExpiry(declinedCookie) {
+                        if (!declinedCookie) {
+                            return true;
+                        }
+
+                        try {
+                            const cookieValue = declinedCookie.split('=')[1];
+                            if (!cookieValue) {
+                                return true;
+                            }
+
+                            const decodedValue = decodeURIComponent(cookieValue);
+                            const declineTimestamp = new Date(decodedValue);
+
+                            if (isNaN(declineTimestamp.getTime())) {
+                                return true;
+                            }
+
+                            const expiryDate = new Date(declineTimestamp);
+                            expiryDate.setDate(expiryDate.getDate() + 1);
+
+                            const now = new Date();
+
+                            return now >= expiryDate;
+
+                        } catch (error) {
+                            console.warn('Error parsing decline cookie:', error);
+                            return true;
+                        }
+                    },
+                    open() {
+                        this.visible = true;
+                        document.documentElement.style.overflow = 'hidden';
+                        document.body.style.overflow = 'hidden';
+                    },
+                    close() {
+                        this.visible = false;
+                        document.documentElement.style.overflow = '';
+                        document.body.style.overflow = '';
+                    },
+                    accept() {
+                        fetch("{{ route('consent.accept') }}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': window.Laravel.csrfToken
+                                },
+                                body: JSON.stringify({})
+                            })
+                            .then(r => r.json())
+                            .then(json => {
+                                if (json && json.guid) {
+                                    const payload = {
+                                        guid: json.guid,
+                                        accepted_at: json.accepted_at,
+                                        version: json.version
+                                    };
+
+                                    const d = new Date();
+                                    d.setFullYear(d.getFullYear() + 1);
+                                    document.cookie = 'site_consent=' + encodeURIComponent(JSON.stringify(payload)) + '; path=/; expires=' + d.toUTCString() + '; SameSite=Lax';
+
+                                    this.close();
+                                } else {
+                                    console.error('Consent accept: unexpected response', json);
+                                    this.close();
+                                }
+                            })
+                            .catch(err => {
+                                console.error('Consent accept error', err);
+                                this.close();
+                            });
+                    },
+                    decline() {
+                        fetch("{{ route('consent.decline') }}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': window.Laravel.csrfToken
+                                },
+                                body: JSON.stringify({})
+                            })
+                            .then(r => r.json())
+                            .then(json => {
+                                const d = new Date();
+                                d.setDate(d.getDate() + 1);
+                                document.cookie = 'site_consent_declined=' + encodeURIComponent(json.timestamp || new Date().toISOString()) + '; path=/; expires=' + d.toUTCString() + '; SameSite=Lax';
+
+                                this.close();
+                            })
+                            .catch(err => {
+                                console.error('Consent decline error', err);
+                                const d = new Date();
+                                d.setDate(d.getDate() + 1);
+                                document.cookie = 'site_consent_declined=' + encodeURIComponent(new Date().toISOString()) + '; path=/; expires=' + d.toUTCString() + '; SameSite=Lax';
+
+                                this.close();
+                            });
                     }
                 }));
             }
