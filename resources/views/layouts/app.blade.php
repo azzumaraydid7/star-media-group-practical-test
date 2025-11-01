@@ -4,8 +4,38 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>@yield('title', 'My Site')</title>
+    <title>@yield('title', 'DailyTimes')</title>
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <meta name="author" content="DailyTimes Media Group">
+    <meta name="description" content="@yield('meta_description', 'Delivering trusted news and insights since 1999. Stay informed with verified and reliable journalism from DailyTimes.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'DailyTimes, News, Malaysia, Trusted News, Articles, Updates')">
+
+    <meta property="og:title" content="@yield('og_title', 'DailyTimes - Trusted News Source')">
+    <meta property="og:description" content="@yield('og_description', 'DailyTimes brings you verified, unbiased news and exclusive insights from Malaysia and beyond.')">
+    <meta property="og:image" content="@yield('og_image', asset('img/logo/daily-times.png'))">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="DailyTimes">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('twitter_title', 'DailyTimes - Trusted News Source')">
+    <meta name="twitter:description" content="@yield('twitter_description', 'Delivering trusted news and insights since 1999.')">
+    <meta name="twitter:image" content="@yield('twitter_image', asset('img/logo/daily-times.png'))">
+
+    <meta name="application-name" content="DailyTimes">
+    <meta name="organization" content="DailyTimes Media Group">
+    <meta name="contact" content="info@dailytimes.my">
+    <meta name="copyright" content="© {{ date('Y') }} DailyTimes Media Group">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/apple-touch-icon.png') }}">
+    <meta name="theme-color" content="#0F172A">
+
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;500;700&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -15,22 +45,49 @@
         .consent-overlay {
             z-index: 9999;
         }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .animate-marquee {
+            animation: marquee 20s linear infinite;
+            width: max-content;
+        }
+
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+
+        .font-bitter {
+            font-family: "Bitter", serif;
+        }
+    </style>
     </style>
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => AOS.init({ duration: 800, once: true }));
+        document.addEventListener('DOMContentLoaded', () => AOS.init({
+            duration: 800,
+            once: true
+        }));
     </script>
 </head>
 
-<body class="bg-gray-50 text-gray-900 antialiased">
+<body class="bg-gray-50 text-gray-900 antialiased font-bitter">
     <header class="bg-white shadow-sm fixed w-full top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
                 <a href="{{ route('home') }}" class="text-2xl font-bold tracking-tight text-gray-800">
                     <span class="text-blue-600">Daily</span>Times
                 </a>
-                
+
                 <nav class="hidden md:flex space-x-6 text-sm font-medium">
                     <a href="{{ route('home') }}" class="hover:underline">Home</a>
                     <a href="{{ route('about') }}" class="hover:underline">About / Contact</a>
@@ -51,7 +108,7 @@
             </div>
 
             <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
-            
+
             <nav id="mobile-menu" class="fixed top-0 right-0 h-full w-80 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 md:hidden">
                 <div class="flex flex-col h-full">
                     <div class="flex items-center justify-between p-4 border-b border-gray-200">
@@ -62,7 +119,7 @@
                             </svg>
                         </button>
                     </div>
-                    
+
                     <div class="flex flex-col space-y-1 p-4 flex-1">
                         <a href="{{ route('home') }}" class="px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">Home</a>
                         <a href="{{ route('about') }}" class="px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">About / Contact</a>
@@ -82,6 +139,7 @@
     <main class="mx-auto pt-16">
         @yield('content')
     </main>
+
     @yield('sticky')
     @yield('content-bottom')
 
@@ -127,31 +185,31 @@
             const mobileMenu = document.getElementById('mobile-menu');
             const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
             const mobileMenuClose = document.getElementById('mobile-menu-close');
-            
+
             function openMobileMenu() {
                 mobileMenuOverlay.classList.remove('hidden');
                 mobileMenu.classList.remove('translate-x-full');
                 document.body.style.overflow = 'hidden'; // Prevent background scrolling
             }
-            
+
             function closeMobileMenu() {
                 mobileMenu.classList.add('translate-x-full');
                 mobileMenuOverlay.classList.add('hidden');
                 document.body.style.overflow = ''; // Restore scrolling
             }
-            
+
             if (mobileMenuButton && mobileMenu) {
                 mobileMenuButton.addEventListener('click', openMobileMenu);
             }
-            
+
             if (mobileMenuClose) {
                 mobileMenuClose.addEventListener('click', closeMobileMenu);
             }
-            
+
             if (mobileMenuOverlay) {
                 mobileMenuOverlay.addEventListener('click', closeMobileMenu);
             }
-            
+
             // Close menu when clicking on navigation links
             const mobileMenuLinks = mobileMenu.querySelectorAll('a, button[type="submit"]');
             mobileMenuLinks.forEach(link => {

@@ -35,6 +35,14 @@
 @push('scripts')
     <script>
         function consentModal() {
+            const noShowPages = ['/privacy', '/terms', '/login'];
+
+            const current = window.location.pathname.replace(/\/+$/, '');
+
+            if (noShowPages.some(path => current.endsWith(path))) {
+                return false;
+            }
+
             return {
                 visible: false,
                 initialized: false,

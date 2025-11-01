@@ -86,7 +86,7 @@
                                         @endif
                                     </div>
                                     <span class="text-sm text-gray-500">
-                                        {{ $article->published_at->format('M j, Y') }}
+                                        {{ $article->published_at->diffForHumans() }}
                                     </span>
                                 </div>
 
@@ -136,3 +136,5 @@
         </section>
     </div>
 @endsection
+
+@include('includes.bottom-headlines')

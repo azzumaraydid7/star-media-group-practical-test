@@ -18,29 +18,37 @@
 
                     <div class="mb-8">
                         <h1 class="text-4xl font-bold mb-4 text-gray-900">{{ $article->title }}</h1>
+                        @section('og_title', $article->title)
+                        @section('twitter_title', $article->title)
                         <div class="flex items-center text-gray-600 mb-6">
                             <span>{{ $article->author ?? 'DailyTimes Group' }}</span>
                             <span class="mx-2">•</span>
-                            <span>{{ $article->published_at->format('F j, Y') }}</span>
+                            <span>{{ $article->published_at->diffForHumans() }}</span>
                             <span class="mx-2">•</span>
                             <span>{{ $article->read_minutes }} min read</span>
                         </div>
                         @if($article->image && file_exists(public_path($article->image)))
-                            <img src="{{ asset($article->image) }}" alt="{{ $article->title }}" class="w-full aspect-video object-cover rounded-2xl shadow-lg">
+                            <img src="{{ asset($article->image) }}" alt="{{ $article->title }}" class="w-full aspect-video object-cover rounded-2xl shadow-lg"
+                            @section('og_image', asset($article->image))
+                            @section('twitter_image', asset($article->image))>
                         @else
-                            <img src="{{ asset('img/default.png') }}" alt="{{ $article->title }}" class="w-full aspect-video object-cover rounded-2xl shadow-lg">
+                            <img src="{{ asset('img/default.png') }}" alt="{{ $article->title }}" class="w-full aspect-video object-cover rounded-2xl shadow-lg"
+                            @section('og_image', asset('img/default.png'))
+                            @section('twitter_image', asset('img/default.png'))>
                         @endif
                     </div>
 
                     <div class="prose prose-lg max-w-none md:text-xl">
                         <div class="text-gray-700 leading-relaxed whitespace-pre-line">{{ $article->content }}</div>
                         <div class="text-gray-700 leading-relaxed whitespace-pre-line">{!! $article->text !!}</div>
+                        @section('og_description', $article->content)
+                        @section('twitter_description', $article->content)
                     </div>
 
                     <div class="mt-12 pt-8 border-t border-gray-200">
                         <div class="flex items-center justify-between">
                             <div class="text-sm text-gray-500">
-                                Published on {{ $article->published_at->format('F j, Y') }}
+                                Published on {{ $article->published_at->format('j F Y') }}
                             </div>
                             <a href="{{ route('articles') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition transform hover:scale-105">
                                 Read More Articles
@@ -71,7 +79,7 @@
                                             </p>
 
                                             <div class="flex items-center justify-between mt-2 text-xs text-gray-500">
-                                                <span>{{ $related->read_minutes }} min read</span>
+                                                <span>{{ $related->published_at->diffForHumans() }}</span>
                                                 <span class="text-blue-600 hover:text-blue-800 font-medium">
                                                     Read →
                                                 </span>
@@ -95,6 +103,8 @@
         </section>
     </div>
 @endsection
+
+@include('includes.bottom-headlines')
 
 @push('scripts')
 <script>
@@ -184,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </p>
 
                         <div class="flex items-center justify-between mt-2 text-xs text-gray-500">
-                            <span>${article.read_minutes} min read</span>
+                            <span>${article.published_at_human}</span>
                             <span class="text-blue-600 hover:text-blue-800 font-medium">
                                 Read →
                             </span>

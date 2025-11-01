@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Home')
-
 <div class="overflow-x-hidden">
     @section('content')
         <section class="max-w-7xl mx-auto px-4 py-12">
@@ -18,8 +16,11 @@
                         <h2 class="text-4xl font-bold mb-5 leading-tight text-gray-900">
                             {{ $featuredArticle->title }}
                         </h2>
-                        <p class="text-gray-700 mb-6 leading-relaxed text-lg">
+                        <p class="text-gray-700 mb-2 leading-relaxed text-lg">
                             {{ Str::limit($featuredArticle->content, 300) }}
+                        </p>
+                        <p class="text-sm text-gray-500 mb-6">
+                            {{ $featuredArticle->published_at->diffForHumans() }}
                         </p>
                         <a href="{{ route('article', $featuredArticle->slug) }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition transform hover:scale-105 w-max inline-block text-center">
                             Read Full Story →
@@ -28,15 +29,16 @@
                         <h2 class="text-4xl font-bold mb-5 leading-tight text-gray-900">
                             Breaking: Major Policy Shift Shakes Global Markets
                         </h2>
-                        <p class="text-gray-700 mb-6 leading-relaxed text-lg">
+                        <p class="text-gray-700 mb-2 leading-relaxed text-lg">
                             In an unprecedented move, world markets witnessed a dramatic shift after the signing of a new international
                             trade policy today. Financial experts predict wide-reaching consequences across industries, with both
                             emerging and developed economies bracing for adjustments. Investors are closely watching central bank
                             responses amid uncertainty.
                         </p>
-                        <a href="{{ route('run.seed') }}" 
-                           class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition transform hover:scale-105 w-max inline-flex items-center justify-center text-center"
-                           onclick="this.classList.add('bg-gray-400', 'cursor-not-allowed'); this.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'hover:scale-105'); this.innerHTML='<svg class=\'animate-spin -ml-1 mr-3 h-5 w-5 text-white\' xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\'><circle class=\'opacity-25\' cx=\'12\' cy=\'12\' r=\'10\' stroke=\'currentColor\' stroke-width=\'4\'></circle><path class=\'opacity-75\' fill=\'currentColor\' d=\'M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\'></path></svg>Loading...'; this.style.pointerEvents='none';">
+                        <p class="text-sm text-gray-500 mb-6">
+                            Today
+                        </p>
+                        <a href="{{ route('run.seed') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition transform hover:scale-105 w-max inline-flex items-center justify-center text-center" onclick="this.classList.add('bg-gray-400', 'cursor-not-allowed'); this.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'hover:scale-105'); this.innerHTML='<svg class=\'animate-spin -ml-1 mr-3 h-5 w-5 text-white\' xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\'><circle class=\'opacity-25\' cx=\'12\' cy=\'12\' r=\'10\' stroke=\'currentColor\' stroke-width=\'4\'></circle><path class=\'opacity-75\' fill=\'currentColor\' d=\'M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\'></path></svg>Loading...'; this.style.pointerEvents='none';">
                             <code class="font-mono bg-blue-700/30 px-2 py-1 rounded text-sm">php artisan db:seed</code>
                         </a>
                     @endif
@@ -62,7 +64,7 @@
                                     <div class="flex items-center justify-between mb-3">
                                         <h3 class="font-semibold text-xl text-gray-900">{{ $newsItem->title }}</h3>
                                         <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full flex-shrink-0 ml-3">
-                                            {{ $newsItem->read_minutes }} min read
+                                            {{ $featuredArticle->published_at->diffForHumans() }}
                                         </span>
                                     </div>
 
@@ -124,7 +126,7 @@
 
                                     <div class="mt-2 flex items-center justify-between text-xs text-gray-500">
                                         <span class="bg-gray-100 px-2 py-1 rounded-full">
-                                            {{ $randomItem->read_minutes }} min read
+                                            {{ $featuredArticle->published_at->diffForHumans() }}
                                         </span>
                                         <span class="text-blue-600 font-medium hover:underline">
                                             Read →
@@ -171,6 +173,8 @@
         </section>
     @endsection
 </div>
+
+@include('includes.bottom-headlines')
 
 @push('scripts')
     <script>
@@ -223,7 +227,7 @@
 
                                         <div class="mt-2 flex items-center justify-between text-xs text-gray-500">
                                             <span class="bg-gray-100 px-2 py-1 rounded-full">
-                                                ${article.read_minutes} min read
+                                                ${article.published_at_human}
                                             </span>
                                             <span class="text-blue-600 font-medium hover:underline">
                                                 Read →

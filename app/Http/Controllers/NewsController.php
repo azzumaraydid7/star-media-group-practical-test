@@ -116,6 +116,10 @@ class NewsController extends Controller
             ->take(3)
             ->get();
 
+        $randomNews->each(function ($article) {
+            $article->published_at_human = $article->published_at->diffForHumans();
+        });
+
         return response()->json($randomNews);
     }
 
@@ -141,6 +145,10 @@ class NewsController extends Controller
             ->inRandomOrder()
             ->limit(4)
             ->get();
+        
+        $relatedArticles->each(function ($article) {
+            $article->published_at_human = $article->published_at->diffForHumans();
+        });
 
         return response()->json($relatedArticles);
     }

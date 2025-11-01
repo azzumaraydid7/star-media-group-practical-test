@@ -8,8 +8,12 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center" data-aos="fade-up" data-aos-duration="1000">
             <h1 class="text-4xl md:text-5xl font-extrabold mb-4">About <span class="text-blue-400">DailyTimes</span></h1>
             <p class="text-gray-300 max-w-2xl mx-auto text-lg">
-                Trusted journalism, modern perspective — delivering stories that matter since 1999.
+                @php
+                    $description = 'Trusted journalism, modern perspective — delivering stories that matter since 1999.';
+                @endphp
             </p>
+            @section('og_description', $description)
+            @section('twitter_description', $description)
         </div>
         <div class="absolute inset-0 opacity-15 bg-[url('{{ asset('img/news_pattern.png') }}')] bg-cover bg-center"></div>
     </section>
