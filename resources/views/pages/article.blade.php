@@ -126,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentSlug = '{{ $article->slug }}';
     let shownArticleIds = [];
     
-    // History tracking variables
     let articlesHistory = [];
     let currentHistoryIndex = -1;
     let isNavigating = false;
@@ -137,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const slug = link.href.split('/article/')[1];
         });
         
-        // Initialize history with server-rendered content
         initializeHistory();
         
         setInterval(() => {
@@ -147,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 
-    // Navigation button event listeners
     document.getElementById('prevRelatedArticles')?.addEventListener('click', function() {
         navigateToHistory(currentHistoryIndex - 1);
     });
@@ -157,7 +154,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function initializeHistory() {
-        // Get initial articles data from server-rendered content
         const initialArticles = [];
         const articleElements = container.querySelectorAll('a[href*="/article/"]');
         
@@ -196,14 +192,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function addToHistory(articles) {
-        // Remove any history items after current index (when navigating back then getting new content)
         articlesHistory = articlesHistory.slice(0, currentHistoryIndex + 1);
         
-        // Add new articles to history
         articlesHistory.push(articles);
         currentHistoryIndex = articlesHistory.length - 1;
         
-        // Limit history size to prevent memory issues
         if (articlesHistory.length > 10) {
             articlesHistory.shift();
             currentHistoryIndex--;
@@ -222,7 +215,6 @@ document.addEventListener('DOMContentLoaded', function() {
         displayArticlesData(articles, false);
         updateNavigationButtons();
         
-        // Allow automatic refresh after a short delay
         setTimeout(() => {
             isNavigating = false;
         }, 1000);
