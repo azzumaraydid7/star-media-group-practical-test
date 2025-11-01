@@ -63,6 +63,12 @@
                     @enderror
                 </div>
 
+                <!-- Author -->
+                <div class="mb-6">
+                    <label for="author" class="block text-sm font-medium text-gray-700 mb-2">Author</label>
+                    <input type="text" id="author" name="author" value="{{ old('author', $article->author) }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Enter author name..." required>
+                </div>
+
                 <!-- Content -->
                 <div>
                     <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
@@ -98,7 +104,7 @@
                             Current Image
                         </label>
                         <div class="flex items-start space-x-4">
-                            @if($article->image && file_exists(public_path($article->image)))
+                            @if ($article->image && file_exists(public_path($article->image)))
                                 <img id="current-image-preview" src="{{ asset($article->image) }}" alt="Article Image" class="w-32 h-32 object-cover rounded-lg border border-gray-300">
                             @else
                                 <img id="current-image-preview" src="{{ asset('img/default.png') }}" alt="Article Image" class="w-32 h-32 object-cover rounded-lg border border-gray-300">
@@ -217,16 +223,23 @@
                 },
                 success: function(data) {
                     const input = $('#title');
+                    const descriptionInput = $('#content');
                     const newText = data.title;
+                    const newDescription = data.description;
                     const currentText = input.val();
+                    const currentDescription = descriptionInput.val();
                     const typingSpeed = 20;
 
                     if (input.data('typingTimeouts')) {
                         input.data('typingTimeouts').forEach(timeout => clearTimeout(timeout));
                     }
+                    if (descriptionInput.data('typingTimeouts')) {
+                        descriptionInput.data('typingTimeouts').forEach(timeout => clearTimeout(timeout));
+                    }
 
                     const timeouts = [];
                     input.data('typingTimeouts', timeouts);
+                    descriptionInput.data('typingTimeouts', timeouts);
 
                     for (let i = 0; i <= currentText.length; i++) {
                         const timeout = setTimeout(() => {
@@ -235,9 +248,23 @@
                         timeouts.push(timeout);
                     }
 
+                    for (let i = 0; i <= currentDescription.length; i++) {
+                        const timeout = setTimeout(() => {
+                            descriptionInput.val(currentDescription.substring(0, currentDescription.length - i));
+                        }, i * typingSpeed);
+                        timeouts.push(timeout);
+                    }
+
                     for (let i = 0; i <= newText.length; i++) {
                         const timeout = setTimeout(() => {
                             input.val(newText.substring(0, i));
+                        }, (currentText.length + i) * typingSpeed);
+                        timeouts.push(timeout);
+                    }
+
+                    for (let i = 0; i <= newDescription.length; i++) {
+                        const timeout = setTimeout(() => {
+                            descriptionInput.val(newDescription.substring(0, i));
                         }, (currentText.length + i) * typingSpeed);
                         timeouts.push(timeout);
                     }

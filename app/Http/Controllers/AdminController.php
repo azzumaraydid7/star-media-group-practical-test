@@ -46,6 +46,7 @@ class AdminController extends Controller
         try {
             $request->validate([
                 'title' => 'required|string|max:255',
+                'author' => 'required|string|max:255',
                 'content' => 'nullable|string|max:500',
                 'text' => 'required|string',
                 'category_id' => 'required|exists:categories,id',
@@ -78,6 +79,7 @@ class AdminController extends Controller
             
             $article->update([
                 'title' => $request->title,
+                'author' => $request->author,
                 'content' => $request->content,
                 'text' => $request->text,
                 'category_id' => $request->category_id,

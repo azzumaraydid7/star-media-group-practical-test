@@ -40,9 +40,7 @@
                         </div>
                     </button>
                 </div>
-                <input type="text" id="title" name="title" value="{{ old('title') }}" 
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
-                       required>
+                <input type="text" id="title" name="title" value="{{ old('title') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" required>
             </div>
 
             <!-- Category -->
@@ -50,9 +48,7 @@
                 <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">
                     Category <span class="text-red-500">*</span>
                 </label>
-                <select id="category_id" name="category_id" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
-                        required>
+                <select id="category_id" name="category_id" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" required>
                     <option value="">Select a category</option>
                     @foreach ($categories as $category)
                         <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -68,17 +64,13 @@
             <!-- Author -->
             <div class="mb-6">
                 <label for="author" class="block text-sm font-medium text-gray-700 mb-2">Author</label>
-                <input type="text" id="author" name="author" value="{{ old('author') }}" 
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
-                       placeholder="Enter author name..." required>
+                <input type="text" id="author" name="author" value="{{ old('author') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Enter author name..." required>
             </div>
 
             <!-- Content (Short Description) -->
             <div class="mb-6">
                 <label for="content" class="block text-sm font-medium text-gray-700 mb-2">Short Description (Optional)</label>
-                <textarea id="content" name="content" rows="3" 
-                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
-                          placeholder="Brief description or excerpt...">{{ old('content') }}</textarea>
+                <textarea id="content" name="content" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Brief description or excerpt...">{{ old('content') }}</textarea>
             </div>
 
             <!-- Image Upload Section -->
@@ -116,8 +108,7 @@
             <!-- Featured Article -->
             <div class="mb-6">
                 <label class="flex items-center">
-                    <input type="checkbox" name="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }} 
-                           class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    <input type="checkbox" name="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }} class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     <span class="ml-2 text-sm text-gray-700">Featured Article</span>
                 </label>
             </div>
@@ -157,16 +148,23 @@
                 },
                 success: function(data) {
                     const input = $('#title');
+                    const descriptionInput = $('#content');
                     const newText = data.title;
+                    const newDescription = data.description;
                     const currentText = input.val();
+                    const currentDescription = descriptionInput.val();
                     const typingSpeed = 20;
 
                     if (input.data('typingTimeouts')) {
                         input.data('typingTimeouts').forEach(timeout => clearTimeout(timeout));
                     }
+                    if (descriptionInput.data('typingTimeouts')) {
+                        descriptionInput.data('typingTimeouts').forEach(timeout => clearTimeout(timeout));
+                    }
 
                     const timeouts = [];
                     input.data('typingTimeouts', timeouts);
+                    descriptionInput.data('typingTimeouts', timeouts);
 
                     for (let i = 0; i <= currentText.length; i++) {
                         const timeout = setTimeout(() => {
@@ -175,9 +173,23 @@
                         timeouts.push(timeout);
                     }
 
+                    for (let i = 0; i <= currentDescription.length; i++) {
+                        const timeout = setTimeout(() => {
+                            descriptionInput.val(currentDescription.substring(0, currentDescription.length - i));
+                        }, i * typingSpeed);
+                        timeouts.push(timeout);
+                    }
+
                     for (let i = 0; i <= newText.length; i++) {
                         const timeout = setTimeout(() => {
                             input.val(newText.substring(0, i));
+                        }, (currentText.length + i) * typingSpeed);
+                        timeouts.push(timeout);
+                    }
+
+                    for (let i = 0; i <= newDescription.length; i++) {
+                        const timeout = setTimeout(() => {
+                            descriptionInput.val(newDescription.substring(0, i));
                         }, (currentText.length + i) * typingSpeed);
                         timeouts.push(timeout);
                     }
