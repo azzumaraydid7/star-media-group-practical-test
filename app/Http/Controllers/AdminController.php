@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ConsentRecord;
@@ -36,7 +37,8 @@ class AdminController extends Controller
     public function editArticle($id)
     {
         $article = News::findOrFail($id);
-        return view('admin.articles.edit', compact('article'));
+        $categories = Category::active()->orderBy('name')->get();
+        return view('admin.articles.edit', compact('article', 'categories'));
     }
 
     public function updateArticle(Request $request, $id)
@@ -46,6 +48,7 @@ class AdminController extends Controller
                 'title' => 'required|string|max:255',
                 'content' => 'nullable|string|max:500',
                 'text' => 'required|string',
+                'category_id' => 'required|exists:categories,id',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
                 'remove_image' => 'nullable|boolean',
                 'is_featured' => 'boolean'
@@ -77,6 +80,7 @@ class AdminController extends Controller
                 'title' => $request->title,
                 'content' => $request->content,
                 'text' => $request->text,
+                'category_id' => $request->category_id,
                 'image' => $imagePath,
                 'is_featured' => $request->boolean('is_featured')
             ]);
@@ -92,7 +96,8 @@ class AdminController extends Controller
 
     public function createArticle()
     {
-        return view('admin.articles.create');
+        $categories = Category::active()->orderBy('name')->get();
+        return view('admin.articles.create', compact('categories'));
     }
 
     public function storeArticle(Request $request)
@@ -103,6 +108,7 @@ class AdminController extends Controller
                 'author' => 'required|string|max:255',
                 'content' => 'nullable|string|max:500',
                 'text' => 'required|string',
+                'category_id' => 'required|exists:categories,id',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
                 'is_featured' => 'boolean'
             ]);
@@ -121,6 +127,7 @@ class AdminController extends Controller
                 'author' => $request->author,
                 'content' => $request->content,
                 'text' => $request->text,
+                'category_id' => $request->category_id,
                 'image' => $imagePath,
                 'is_featured' => $request->boolean('is_featured'),
                 'slug' => Str::slug($request->title),

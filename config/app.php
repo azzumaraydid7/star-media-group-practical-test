@@ -84,6 +84,8 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
+    'gemini_api_key' => env('GEMINI_API_KEY', 'en_US'),
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

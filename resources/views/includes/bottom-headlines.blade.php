@@ -15,7 +15,7 @@
                         @foreach ($latestHeadlines as $headline)
                             <a href="{{ route('article', $headline->slug) }}" class="mx-4 hover:text-blue-300 transition-colors">
                                 <span class="px-2 py-1 bg-orange-400 text-stone-600 font-bold text-xs rounded mr-2">
-                                    {{ $headline->category->name }}
+                                    {{ $headline?->category?->name }}
                                 </span>{{ $headline->title }}
                             </a>
                         @endforeach
@@ -31,7 +31,7 @@
                         @foreach ($latestHeadlines as $headline)
                             <a href="{{ route('article', $headline->slug) }}" class="mx-4 hover:text-blue-300 transition-colors">
                                 <span class="px-2 py-1 bg-orange-400 text-stone-600 font-bold text-xs rounded mr-2">
-                                    {{ $headline->category->name }}
+                                    {{ $headline?->category?->name }}
                                 </span>{{ $headline->title }}
                             </a>
                         @endforeach

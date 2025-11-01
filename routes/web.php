@@ -52,3 +52,5 @@ Route::middleware(['admin'])->group(function () {
     Route::put('/admin/articles/{id}', [AdminController::class, 'updateArticle'])->name('admin.articles.update');
     Route::delete('/admin/articles/{id}', [AdminController::class, 'deleteArticle'])->name('admin.articles.delete');
 });
+
+Route::post('/ai/generate-title', [App\Http\Controllers\AiController::class, 'generateTitle'])->name('ai.generate.title');
