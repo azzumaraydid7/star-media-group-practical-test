@@ -49,9 +49,13 @@
     @section('sticky')
         <section class="max-w-7xl mx-auto px-4 py-16 flex flex-col md:flex-row md:items-start md:space-x-10">
             <div class="flex-1 border-t border-gray-100 mb-10 md:mb-0" x-data="{ selected: null }">
-                <h2 class="text-3xl font-bold mb-10 text-gray-900" data-aos="fade-up">
-                    Latest Headlines
-                </h2>
+                <div class="group flex items-center pb-2 mb-10" data-aos="fade-up">
+                    <div class="w-6 border-t-4 border-stone-600 group-hover:border-stone-400 transition-all duration-2000 ease-in-out"></div>
+                    <h2 class="text-3xl font-bold text-gray-900 uppercase mx-2 text-foreground group-hover:text-accent-category transition-colors duration-500 ease-in-out leading-tight">
+                        Latest Headlines
+                    </h2>
+                    <div class="flex-grow h-1 bg-gradient-to-r from-stone-400 to-stone-600 group-hover:from-stone-600 group-hover:to-stone-400 transition-all duration-2000 ease-in-out"></div>
+                </div>
 
                 <div class="flex flex-wrap -mx-4">
                     @foreach ($news as $index => $newsItem)
@@ -101,7 +105,7 @@
                 </div>
             </div>
 
-            <aside class="w-full md:w-1/3 border-t border-gray-100 md:pl-4 md:sticky mt-10 md:top-24 self-start h-[38rem]">
+            <aside class="w-full md:w-1/3 border-t border-gray-100 md:pl-4 md:sticky mt-10 md:mt-0 md:top-24 self-start h-[38rem]">
                 <div class="flex items-center justify-between mb-10">
                     <h2 class="text-3xl font-bold text-gray-900" data-aos="fade-up">
                         You Might Also Like
