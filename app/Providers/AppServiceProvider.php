@@ -21,7 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Share latest headlines with all views
         View::composer('*', function ($view) {
             $latestHeadlines = News::published()
                 ->orderBy('published_at', 'desc')

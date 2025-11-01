@@ -19,14 +19,12 @@ class NewsController extends Controller
             ->orderBy('published_at', 'desc')
             ->orderBy('created_at', 'desc');
 
-        // Filter by category if provided
         if ($request->has('category') && $request->category) {
             $query->where('category_id', $request->category);
         }
 
         $articles = $query->paginate(12);
         
-        // Get all active categories for the filter dropdown
         $categories = Category::active()->orderBy('name')->get();
 
         return view('pages.articles', compact('articles', 'categories'));
@@ -151,6 +149,22 @@ class NewsController extends Controller
         });
 
         return response()->json($relatedArticles);
+    }
+
+    /**
+     * Get bottom headlines for AJAX loading
+     */
+    public function bottomHeadlines()
+    {
+        $latestHeadlines = News::published()
+            ->with('category')
+            ->orderBy('published_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        return response(view('includes.bottom-headlines', compact('latestHeadlines'))->render())
+            ->header('Content-Type', 'text/html');
     }
 
     /**

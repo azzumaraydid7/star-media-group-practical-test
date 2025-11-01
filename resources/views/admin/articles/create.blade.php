@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Article - DailyTimes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Quill Rich Text Editor -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
@@ -174,106 +174,6 @@
         </div>
     </div>
 
-    <script>
-        // Initialize Quill editor
-        var quill = new Quill('#editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    [{ 'color': [] }, { 'background': [] }],
-                    [{ 'align': [] }],
-                    ['link', 'image'],
-                    [{ 'indent': '-1'}, { 'indent': '+1' }],
-                    ['clean']
-                ]
-            }
-        });
-
-        // Sync Quill content with hidden textarea
-        quill.on('text-change', function() {
-            document.getElementById('text').value = quill.root.innerHTML;
-        });
-
-        // Form submission handler
-        document.getElementById('articleForm').addEventListener('submit', function(e) {
-            document.getElementById('text').value = quill.root.innerHTML;
-        });
-
-        // Image upload functionality
-        const imageUploadArea = document.getElementById('imageUploadArea');
-        const imageInput = document.getElementById('image');
-        const imagePreview = document.getElementById('imagePreview');
-        const previewImg = document.getElementById('previewImg');
-        const uploadPrompt = document.getElementById('uploadPrompt');
-        const removeImageBtn = document.getElementById('removeImage');
-
-        // Click to upload
-        imageUploadArea.addEventListener('click', () => {
-            imageInput.click();
-        });
-
-        // Drag and drop functionality
-        imageUploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            imageUploadArea.classList.add('border-blue-400', 'bg-blue-50');
-        });
-
-        imageUploadArea.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            imageUploadArea.classList.remove('border-blue-400', 'bg-blue-50');
-        });
-
-        imageUploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            imageUploadArea.classList.remove('border-blue-400', 'bg-blue-50');
-            
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleImageFile(files[0]);
-            }
-        });
-
-        // File input change
-        imageInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleImageFile(e.target.files[0]);
-            }
-        });
-
-        // Handle image file
-        function handleImageFile(file) {
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                alert('Please select an image file.');
-                return;
-            }
-
-            // Validate file size (10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                alert('File size must be less than 10MB.');
-                return;
-            }
-
-            // Show preview
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImg.src = e.target.result;
-                uploadPrompt.classList.add('hidden');
-                imagePreview.classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Remove image
-        removeImageBtn.addEventListener('click', () => {
-            imageInput.value = '';
-            previewImg.src = '';
-            uploadPrompt.classList.remove('hidden');
-            imagePreview.classList.add('hidden');
-        });
-    </script>
+    @include('admin.includes.quill-text-editor-create')
 </body>
 </html>

@@ -46,33 +46,27 @@ class AdminController extends Controller
                 'title' => 'required|string|max:255',
                 'content' => 'nullable|string|max:500',
                 'text' => 'required|string',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // 10MB max
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
                 'remove_image' => 'nullable|boolean',
                 'is_featured' => 'boolean'
             ]);
 
             $article = News::findOrFail($id);
             
-            // Handle image upload and removal
-            $imagePath = $article->image; // Keep existing image by default
+            $imagePath = $article->image;
             
-            // Check if user wants to remove the current image
             if ($request->boolean('remove_image')) {
-                // Delete the old image file if it exists
                 if ($article->image && file_exists(public_path($article->image))) {
                     unlink(public_path($article->image));
                 }
                 $imagePath = null;
             }
             
-            // Handle new image upload
             if ($request->hasFile('image')) {
-                // Delete the old image file if it exists
                 if ($article->image && file_exists(public_path($article->image))) {
                     unlink(public_path($article->image));
                 }
                 
-                // Store the new image
                 $image = $request->file('image');
                 $imageName = time() . '_' . $image->getClientOriginalName();
                 $image->move(public_path('img'), $imageName);
@@ -109,13 +103,12 @@ class AdminController extends Controller
                 'author' => 'required|string|max:255',
                 'content' => 'nullable|string|max:500',
                 'text' => 'required|string',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // 10MB max
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
                 'is_featured' => 'boolean'
             ]);
 
             $imagePath = null;
             
-            // Handle image upload
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . '_' . $image->getClientOriginalName();

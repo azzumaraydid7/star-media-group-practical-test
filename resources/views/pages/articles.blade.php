@@ -136,5 +136,3 @@
         </section>
     </div>
 @endsection
-
-@include('includes.bottom-headlines')

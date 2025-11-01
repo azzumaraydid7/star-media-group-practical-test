@@ -1,4 +1,4 @@
-<div class="fixed bottom-0 left-0 w-full bg-gray-900 text-white py-3 overflow-hidden z-10">
+<div>
     <div class="flex items-center gap-4 overflow-hidden">
         <div class="items-center gap-2 shrink-0 pl-6 hidden md:flex">
             <span class="uppercase text-xs tracking-wider font-bold text-red-600 bg-red-100 px-2 py-1 rounded">

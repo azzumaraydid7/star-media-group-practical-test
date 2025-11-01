@@ -37,7 +37,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -139,6 +139,7 @@
     <main class="mx-auto pt-16">
         @yield('content')
     </main>
+    <div id="bottom-headlines-container" class="opacity-0 transition-opacity duration-500 z-10 fixed bottom-0 left-0 w-full bg-gray-900 text-white py-3 overflow-hidden"></div>
 
     @yield('sticky')
     @yield('content-bottom')
@@ -189,13 +190,13 @@
             function openMobileMenu() {
                 mobileMenuOverlay.classList.remove('hidden');
                 mobileMenu.classList.remove('translate-x-full');
-                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                document.body.style.overflow = 'hidden';
             }
 
             function closeMobileMenu() {
                 mobileMenu.classList.add('translate-x-full');
                 mobileMenuOverlay.classList.add('hidden');
-                document.body.style.overflow = ''; // Restore scrolling
+                document.body.style.overflow = '';
             }
 
             if (mobileMenuButton && mobileMenu) {
@@ -210,7 +211,6 @@
                 mobileMenuOverlay.addEventListener('click', closeMobileMenu);
             }
 
-            // Close menu when clicking on navigation links
             const mobileMenuLinks = mobileMenu.querySelectorAll('a, button[type="submit"]');
             mobileMenuLinks.forEach(link => {
                 link.addEventListener('click', closeMobileMenu);
@@ -240,6 +240,39 @@
                 }));
             });
         })();
+
+        function loadBottomHeadlines() {
+            const noShowPages = ['/privacy', '/terms', '/login'];
+
+            const current = window.location.pathname.replace(/\/+$/, '');
+
+            if (noShowPages.some(path => current.endsWith(path))) {
+                return false;
+            }
+            
+            fetch('/api/bottom-headlines', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                const container = document.getElementById('bottom-headlines-container');
+                if (container) {
+                    container.innerHTML = html;
+                    container.classList.replace('opacity-0', 'opacity-100');
+                }
+            })
+            .catch(error => {
+                console.error('Error loading bottom headlines:', error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(loadBottomHeadlines, 500);
+        });
     </script>
 
     @stack('scripts')

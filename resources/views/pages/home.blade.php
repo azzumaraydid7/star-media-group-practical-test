@@ -101,10 +101,24 @@
                 </div>
             </div>
 
-            <aside class="w-full md:w-1/3 border-t border-gray-100 md:pl-4 md:sticky md:top-24 self-start h-[38rem]">
-                <h2 class="text-3xl font-bold mb-10 text-gray-900" data-aos="fade-up">
-                    You Might Also Like
-                </h2>
+            <aside class="w-full md:w-1/3 border-t border-gray-100 md:pl-4 md:sticky mt-10 md:top-24 self-start h-[38rem]">
+                <div class="flex items-center justify-between mb-10">
+                    <h2 class="text-3xl font-bold text-gray-900" data-aos="fade-up">
+                        You Might Also Like
+                    </h2>
+                    <div class="flex items-center gap-2">
+                        <button id="prevRandomNews" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" title="Previous articles">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                            </svg>
+                        </button>
+                        <button id="nextRandomNews" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200" title="Next articles">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
 
                 @if ($randomNews->count() > 0)
                     <div id="random-news-container" class="flex flex-col gap-6">
@@ -174,13 +188,126 @@
     @endsection
 </div>
 
-@include('includes.bottom-headlines')
-
 @push('scripts')
     <script>
         let previousArticleIds = [];
+        let newsHistory = [];
+        let currentHistoryIndex = -1;
+        let isNavigating = false;
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevRandomNews');
+            const nextBtn = document.getElementById('nextRandomNews');
+            
+            if (prevBtn) {
+                prevBtn.disabled = currentHistoryIndex <= 0;
+            }
+            if (nextBtn) {
+                nextBtn.disabled = currentHistoryIndex >= newsHistory.length - 1;
+            }
+        }
+
+        function addToHistory(newsData) {
+            if (currentHistoryIndex < newsHistory.length - 1) {
+                newsHistory = newsHistory.slice(0, currentHistoryIndex + 1);
+            }
+            
+            newsHistory.push(newsData);
+            currentHistoryIndex = newsHistory.length - 1;
+            
+            if (newsHistory.length > 10) {
+                newsHistory.shift();
+                currentHistoryIndex--;
+            }
+            
+            updateNavigationButtons();
+        }
+
+        function navigateToHistory(index) {
+            if (index < 0 || index >= newsHistory.length || isNavigating) return;
+            
+            isNavigating = true;
+            currentHistoryIndex = index;
+            const newsData = newsHistory[index];
+            
+            displayNewsData(newsData, false);
+            updateNavigationButtons();
+            
+            setTimeout(() => {
+                isNavigating = false;
+            }, 500);
+        }
+
+        function displayNewsData(data, addToHistoryFlag = true) {
+            const container = document.getElementById('random-news-container');
+            if (!container || !data || data.length === 0) return;
+
+            if (addToHistoryFlag) {
+                addToHistory(data);
+            }
+
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(10px)';
+            container.style.transition = 'all 0.4s ease-in-out';
+
+            setTimeout(() => {
+                container.innerHTML = '';
+
+                data.forEach((article, index) => {
+                    const articleElement = document.createElement('a');
+                    articleElement.href = `/article/${article.slug}`;
+                    articleElement.className = 'bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 overflow-hidden flex items-start gap-4 p-4 cursor-pointer hover:-translate-y-1';
+                    let image = "{{ asset('') }}" + (article.image ? article.image : 'img/default.png');
+
+                    articleElement.style.opacity = '0';
+                    articleElement.style.transform = 'translateY(20px)';
+                    articleElement.style.transition = 'all 0.5s ease-out';
+
+                    articleElement.innerHTML = `
+                        <div class="flex-shrink-0 w-28 h-20 overflow-hidden rounded-md">
+                            <img src="${image}" alt="${article.title}" class="w-full h-full object-cover">
+                        </div>
+
+                        <div class="flex flex-col justify-between flex-1">
+                            <div>
+                                <h3 class="font-semibold text-base text-gray-900 leading-tight mb-1 line-clamp-2">
+                                    ${article.title}
+                                </h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">
+                                    ${article.content.substring(0, 80)}${article.content.length > 80 ? '...' : ''}
+                                </p>
+                            </div>
+
+                            <div class="mt-2 flex items-center justify-between text-xs text-gray-500">
+                                <span class="bg-gray-100 px-2 py-1 rounded-full">
+                                    ${article.published_at_human}
+                                </span>
+                                <span class="text-blue-600 font-medium hover:underline">
+                                    Read →
+                                </span>
+                            </div>
+                        </div>
+                    `;
+
+                    container.appendChild(articleElement);
+
+                    setTimeout(() => {
+                        articleElement.style.opacity = '1';
+                        articleElement.style.transform = 'translateY(0)';
+                    }, 100 + (index * 150));
+                });
+
+                setTimeout(() => {
+                    container.style.opacity = '1';
+                    container.style.transform = 'translateY(0)';
+                }, 200);
+
+            }, 300);
+        }
 
         function refreshRandomNews() {
+            if (isNavigating) return;
+            
             let url = '/api/random-news';
             if (previousArticleIds.length > 0) {
                 url += '?exclude=' + previousArticleIds.join(',');
@@ -189,73 +316,47 @@
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    const container = document.getElementById('random-news-container');
-                    if (container && data.length > 0) {
+                    if (data.length > 0) {
                         previousArticleIds = data.map(article => article.id);
-
-                        container.style.opacity = '0';
-                        container.style.transform = 'translateY(10px)';
-                        container.style.transition = 'all 0.4s ease-in-out';
-
-                        setTimeout(() => {
-                            container.innerHTML = '';
-
-                            data.forEach((article, index) => {
-                                const articleElement = document.createElement('a');
-                                articleElement.href = `/article/${article.slug}`;
-                                articleElement.className = 'bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 overflow-hidden flex items-start gap-4 p-4 cursor-pointer hover:-translate-y-1';
-                                let image = "{{ asset('') }}" + (article.image ? article.image : 'img/default.png');
-
-                                articleElement.style.opacity = '0';
-                                articleElement.style.transform = 'translateY(20px)';
-                                articleElement.style.transition = 'all 0.5s ease-out';
-
-                                articleElement.innerHTML = `
-                                    <div class="flex-shrink-0 w-28 h-20 overflow-hidden rounded-md">
-                                        <img src="${image}" alt="${article.title}" class="w-full h-full object-cover">
-                                    </div>
-
-                                    <div class="flex flex-col justify-between flex-1">
-                                        <div>
-                                            <h3 class="font-semibold text-base text-gray-900 leading-tight mb-1 line-clamp-2">
-                                                ${article.title}
-                                            </h3>
-                                            <p class="text-gray-600 text-sm line-clamp-2">
-                                                ${article.content.substring(0, 80)}${article.content.length > 80 ? '...' : ''}
-                                            </p>
-                                        </div>
-
-                                        <div class="mt-2 flex items-center justify-between text-xs text-gray-500">
-                                            <span class="bg-gray-100 px-2 py-1 rounded-full">
-                                                ${article.published_at_human}
-                                            </span>
-                                            <span class="text-blue-600 font-medium hover:underline">
-                                                Read →
-                                            </span>
-                                        </div>
-                                    </div>
-                                `;
-
-                                container.appendChild(articleElement);
-
-                                setTimeout(() => {
-                                    articleElement.style.opacity = '1';
-                                    articleElement.style.transform = 'translateY(0)';
-                                }, 100 + (index * 150)); // Stagger animation by 150ms per item
-                            });
-
-                            setTimeout(() => {
-                                container.style.opacity = '1';
-                                container.style.transform = 'translateY(0)';
-                            }, 200);
-
-                        }, 300);
+                        displayNewsData(data, true);
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching random news:', error);
                 });
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const prevBtn = document.getElementById('prevRandomNews');
+            const nextBtn = document.getElementById('nextRandomNews');
+            
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function() {
+                    navigateToHistory(currentHistoryIndex - 1);
+                });
+            }
+            
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function() {
+                    navigateToHistory(currentHistoryIndex + 1);
+                });
+            }
+            
+            const container = document.getElementById('random-news-container');
+            if (container && container.children.length > 0) {
+                fetch('/api/random-news')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            addToHistory(data);
+                            previousArticleIds = data.map(article => article.id);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error initializing random news history:', error);
+                    });
+            }
+        });
 
         setInterval(refreshRandomNews, 5000);
 
@@ -275,7 +376,6 @@
 
         setInterval(refreshRandomNewsWithIndicator, 60000);
 
-        // Subscription form handling
         document.getElementById('subscriptionForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -284,11 +384,9 @@
             const subscribeBtn = document.getElementById('subscribeBtn');
             const messageDiv = document.getElementById('subscriptionMessage');
 
-            // Disable form during submission
             subscribeBtn.disabled = true;
             subscribeBtn.innerHTML = 'Subscribing...';
 
-            // Get form data
             const formData = new FormData(form);
 
             fetch('{{ route('subscribe') }}', {
@@ -322,7 +420,6 @@
                     messageDiv.textContent = 'Something went wrong. Please try again later.';
                 })
                 .finally(() => {
-                    // Re-enable form
                     subscribeBtn.disabled = false;
                     subscribeBtn.innerHTML = 'Subscribe →';
                 });

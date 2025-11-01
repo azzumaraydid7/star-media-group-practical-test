@@ -58,7 +58,22 @@
 
                     @if (isset($relatedArticles) && $relatedArticles->count() > 0)
                         <div class="mt-16 h-[36rem] md:h-[26rem]">
-                            <h2 class="text-2xl font-bold mb-8 text-gray-900">Related Articles</h2>
+                            <div class="flex items-center justify-between mb-8">
+                                <h2 class="text-2xl font-bold text-gray-900">Related Articles</h2>
+                                <div class="flex gap-2">
+                                    <button id="prevRelatedArticles" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" title="Previous articles">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                        </svg>
+                                    </button>
+                                    <button id="nextRelatedArticles" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200" title="Next articles">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                             
                             <div id="relatedArticlesContainer" class="grid md:grid-cols-2 gap-8">
                                 @foreach ($relatedArticles as $related)
                                     <a href="{{ route('article', $related->slug) }}" class="flex items-start bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 mb-4">
@@ -104,63 +119,116 @@
     </div>
 @endsection
 
-@include('includes.bottom-headlines')
-
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('relatedArticlesContainer');
     const currentSlug = '{{ $article->slug }}';
     let shownArticleIds = [];
+    
+    // History tracking variables
+    let articlesHistory = [];
+    let currentHistoryIndex = -1;
+    let isNavigating = false;
 
     if (container) {
         const initialArticles = container.querySelectorAll('a[href*="/article/"]');
         initialArticles.forEach(link => {
             const slug = link.href.split('/article/')[1];
         });
-        setInterval(refreshRelatedArticles, 5000);
+        
+        // Initialize history with server-rendered content
+        initializeHistory();
+        
+        setInterval(() => {
+            if (!isNavigating) {
+                refreshRelatedArticles();
+            }
+        }, 5000);
     }
 
-    function refreshRelatedArticles() {
-        if (!container) return;
+    // Navigation button event listeners
+    document.getElementById('prevRelatedArticles')?.addEventListener('click', function() {
+        navigateToHistory(currentHistoryIndex - 1);
+    });
 
-        const excludeParam = shownArticleIds.length > 0 ? `?exclude=${shownArticleIds.join(',')}` : '';
+    document.getElementById('nextRelatedArticles')?.addEventListener('click', function() {
+        navigateToHistory(currentHistoryIndex + 1);
+    });
 
-        fetch(`/api/related-articles/${currentSlug}${excludeParam}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    updateRelatedArticles(data);
-                    data.forEach(article => {
-                        if (!shownArticleIds.includes(article.id)) {
-                            shownArticleIds.push(article.id);
-                        }
-                    });
-                } else {
-                    shownArticleIds = [];
-                    
-                    fetch(`/api/related-articles/${currentSlug}`)
-                        .then(response => response.json())
-                        .then(freshData => {
-                            if (freshData && freshData.length > 0) {
-                                updateRelatedArticles(freshData);
-                                freshData.forEach(article => {
-                                    shownArticleIds.push(article.id);
-                                });
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error fetching fresh articles:', error);
-                        });
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching related articles:', error);
+    function initializeHistory() {
+        // Get initial articles data from server-rendered content
+        const initialArticles = [];
+        const articleElements = container.querySelectorAll('a[href*="/article/"]');
+        
+        articleElements.forEach(element => {
+            const slug = element.href.split('/article/')[1];
+            const title = element.querySelector('h3').textContent.trim();
+            const content = element.querySelector('p').textContent.trim();
+            const publishedAt = element.querySelector('.text-xs span').textContent.trim();
+            const image = element.querySelector('img').src;
+            
+            initialArticles.push({
+                slug: slug,
+                title: title,
+                content: content,
+                published_at_human: publishedAt,
+                image: image.replace("{{ asset('') }}", '')
             });
+        });
+        
+        if (initialArticles.length > 0) {
+            addToHistory(initialArticles);
+        }
     }
 
-    function updateRelatedArticles(articles) {
-        const container = document.getElementById('relatedArticlesContainer');
+    function updateNavigationButtons() {
+        const prevBtn = document.getElementById('prevRelatedArticles');
+        const nextBtn = document.getElementById('nextRelatedArticles');
+        
+        if (prevBtn) {
+            prevBtn.disabled = currentHistoryIndex <= 0;
+        }
+        
+        if (nextBtn) {
+            nextBtn.disabled = currentHistoryIndex >= articlesHistory.length - 1;
+        }
+    }
+
+    function addToHistory(articles) {
+        // Remove any history items after current index (when navigating back then getting new content)
+        articlesHistory = articlesHistory.slice(0, currentHistoryIndex + 1);
+        
+        // Add new articles to history
+        articlesHistory.push(articles);
+        currentHistoryIndex = articlesHistory.length - 1;
+        
+        // Limit history size to prevent memory issues
+        if (articlesHistory.length > 10) {
+            articlesHistory.shift();
+            currentHistoryIndex--;
+        }
+        
+        updateNavigationButtons();
+    }
+
+    function navigateToHistory(index) {
+        if (index < 0 || index >= articlesHistory.length) return;
+        
+        isNavigating = true;
+        currentHistoryIndex = index;
+        const articles = articlesHistory[index];
+        
+        displayArticlesData(articles, false);
+        updateNavigationButtons();
+        
+        // Allow automatic refresh after a short delay
+        setTimeout(() => {
+            isNavigating = false;
+        }, 1000);
+    }
+
+    function displayArticlesData(articles, addToHistoryFlag = true) {
         if (!container) return;
 
         container.style.transition = 'opacity 0.3s ease';
@@ -209,6 +277,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 container.style.opacity = '1';
             }, 100);
         }, 300);
+
+        if (addToHistoryFlag) {
+            addToHistory(articles);
+        }
+    }
+
+    function refreshRelatedArticles() {
+        if (!container) return;
+
+        const excludeParam = shownArticleIds.length > 0 ? `?exclude=${shownArticleIds.join(',')}` : '';
+
+        fetch(`/api/related-articles/${currentSlug}${excludeParam}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    displayArticlesData(data, true);
+                    data.forEach(article => {
+                        if (!shownArticleIds.includes(article.id)) {
+                            shownArticleIds.push(article.id);
+                        }
+                    });
+                } else {
+                    shownArticleIds = [];
+                    
+                    fetch(`/api/related-articles/${currentSlug}`)
+                        .then(response => response.json())
+                        .then(freshData => {
+                            if (freshData && freshData.length > 0) {
+                                displayArticlesData(freshData, true);
+                                freshData.forEach(article => {
+                                    shownArticleIds.push(article.id);
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching fresh articles:', error);
+                        });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching related articles:', error);
+            });
     }
 });
 </script>

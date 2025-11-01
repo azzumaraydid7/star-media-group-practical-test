@@ -66,7 +66,6 @@ class ConsentController extends Controller
             ]);
         }
 
-        // Check if the accepted_at timestamp matches
         $cookieAcceptedAt = Carbon::parse($request->accepted_at);
         $dbAcceptedAt = Carbon::parse($record->accepted_at);
 
@@ -77,7 +76,6 @@ class ConsentController extends Controller
             ]);
         }
 
-        // Check if version matches
         if ($record->version !== $request->version) {
             return response()->json([
                 'valid' => false,

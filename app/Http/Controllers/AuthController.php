@@ -27,7 +27,6 @@ class AuthController extends Controller
             return back()->withErrors(['email' => 'Invalid credentials.'])->withInput($request->only(['email', 'password']));
         }
 
-        // Store user info in session
         session([
             'user_id' => $user->id,
             'user_name' => $user->name,
