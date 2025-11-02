@@ -44,8 +44,7 @@
         <div x-show="open" @click="open = false" class="fixed inset-0 bg-black bg-opacity-40 z-40 lg:hidden" x-transition.opacity></div>
 
         <!-- Sidebar -->
-        <div class="w-64 lg:pt-20 bg-white shadow-lg min-h-screen fixed lg:relative z-50 lg:z-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out" :class="open ? 'translate-x-0' : '-translate-x-full'">
-
+        <div class="xl:w-64 lg:pt-20 bg-white shadow-lg min-h-screen fixed lg:relative z-50 lg:z-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out" :class="open ? 'translate-x-0' : '-translate-x-full'">
             <div class="p-4">
                 <a href="{{ route('dashboard') }}" class="text-xl font-bold text-gray-800 pb-4 lg:hidden pl-2"><span class="text-blue-600">Daily</span>Times</a>
                 <ul class="space-y-2 pt-4">

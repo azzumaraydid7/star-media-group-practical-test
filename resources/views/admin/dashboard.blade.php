@@ -10,8 +10,8 @@
 
 @section('content')
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-lg shadow">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+        <div class="bg-white p-3 rounded-lg shadow">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-blue-100 text-blue-500">
                     <i class="fas fa-shield-alt text-2xl"></i>
@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow">
+        <div class="bg-white p-3 rounded-lg shadow">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-green-100 text-green-500">
                     <i class="fas fa-newspaper text-2xl"></i>
@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow">
+        <div class="bg-white p-3 rounded-lg shadow">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-yellow-100 text-yellow-500">
                     <i class="fas fa-clock text-2xl"></i>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow">
+        <div class="bg-white p-3 rounded-lg shadow">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-purple-100 text-purple-500">
                     <i class="fas fa-users text-2xl"></i>
@@ -61,7 +61,7 @@
     </div>
 
     <!-- Recent Activity -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <!-- Recent Consents -->
         <div class="bg-white rounded-lg shadow">
             <div class="p-6 border-b border-gray-200">

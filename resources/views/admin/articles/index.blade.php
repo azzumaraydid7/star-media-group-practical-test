@@ -79,9 +79,9 @@
                                                         <i class="fas fa-image text-gray-400"></i>
                                                     </div>
                                                 @endif
-                                                <div>
+                                                <div class="min-w-0 w-full sm:max-w-xs">
                                                     <div class="text-sm font-medium text-gray-900 truncate">
-                                                        {{-- {{ $article->title }} --}}
+                                                        {{ $article->title }}
                                                     </div>
                                                     <div class="text-sm text-gray-500">
                                                         {{ Str::limit($article->excerpt, 60) }}
