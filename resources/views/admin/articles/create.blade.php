@@ -3,7 +3,7 @@
 @section('title', 'Create Article')
 
 @section('header')
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between pt-16">
         <div>
             <h2 class="text-3xl font-bold text-gray-800">Create New Article</h2>
             <p class="text-gray-600">Add a new article to your news site</p>

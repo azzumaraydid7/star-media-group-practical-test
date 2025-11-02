@@ -3,7 +3,7 @@
 <div class="overflow-x-hidden">
     @section('content')
         <section class="max-w-7xl mx-auto px-4 py-12">
-            <div class="grid md:grid-cols-2 gap-10 items-center">
+            <div class="grid lg:grid-cols-2 gap-10 items-center">
                 <div data-aos="fade-right">
                     @if ($featuredArticle)
                         @if($featuredArticle->image && file_exists(public_path($featuredArticle->image)))
@@ -61,39 +61,36 @@
                     <div class="flex-grow h-1 bg-gradient-to-r from-stone-400 to-stone-600 group-hover:from-stone-600 group-hover:to-stone-400 transition-all duration-2000 ease-in-out"></div>
                 </div>
 
-                <div class="flex flex-wrap -mx-4">
+                <div class="grid grid-cols-2 gap-4">
                     @foreach ($news as $index => $newsItem)
-                        <div class="w-full sm:w-1/2 px-4 mb-8">
-                            <div class="bg-white rounded-2xl shadow transition-all duration-500 cursor-pointer overflow-hidden transform hover:-translate-y-1" :class="selected === {{ $index }} ?
-                                'ring-4 ring-blue-400 shadow-xl scale-[1.02]' :
-                                'hover:shadow-lg h-[25.62rem]'" @click="selected === {{ $index }} ? selected = null : selected = {{ $index }}" x-transition>
-                                <img src="{{ asset($newsItem->image) }}" class="w-full aspect-video object-cover">
-                                <div class="p-6">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <h3 class="font-semibold text-xl text-gray-900">{{ $newsItem->title }}</h3>
-                                        <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full flex-shrink-0 ml-3">
-                                            {{ $featuredArticle->published_at->diffForHumans() }}
-                                        </span>
-                                    </div>
+                        <div class="bg-white rounded-2xl shadow transition-all duration-500 cursor-pointer overflow-hidden transform hover:-translate-y-1" :class="selected === {{ $index }} ?
+                            'ring-4 ring-blue-400 shadow-xl scale-[1.02]' :
+                            'hover:shadow-lg'" @click="selected === {{ $index }} ? selected = null : selected = {{ $index }}" x-transition>
+                            <img src="{{ asset($newsItem->image) }}" class="w-full aspect-video object-cover">
+                            <div class="p-3 lg:p-6">
+                                <div class="lg:flex items-center justify-between mb-3">
+                                    <h3 class="font-semibold lg:text-xl text-gray-900 pb-3 lg:pb-0">{{ $newsItem->title }}</h3>
+                                    <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full flex-shrink-0 lg:ml-3">
+                                        {{ $featuredArticle->published_at->diffForHumans() }}
+                                    </span>
+                                </div>
 
-                                    <p class="text-gray-600 line-clamp-3" x-show="selected !== {{ $index }}">
-                                        {{ $newsItem->content }}
+                                <p class="text-gray-600 line-clamp-2 lg:line-clamp-3" x-show="selected !== {{ $index }}">
+                                    {{ $newsItem->content }}
+                                </p>
+
+                                <div x-show="selected === {{ $index }}" x-transition>
+                                    <p class="text-gray-700 mt-3 leading-relaxed">
+                                        {{ $newsItem->content }} Read more insights from experts worldwide
+                                        on how these trends redefine the global landscape.
                                     </p>
-
-                                    <div x-show="selected === {{ $index }}" x-transition>
-                                        <p class="text-gray-700 mt-3 leading-relaxed">
-                                            {{ $newsItem->content }} Read more insights from experts worldwide
-                                            on how these trends redefine the global landscape.
-                                        </p>
-                                        <a href="{{ route('article', $newsItem->slug) }}" class="inline-block mt-4 text-blue-600 font-semibold hover:underline transition-colors duration-200">
-                                            Continue Reading →
-                                        </a>
-                                    </div>
+                                    <a href="{{ route('article', $newsItem->slug) }}" class="inline-block mt-4 text-blue-600 font-semibold hover:underline transition-colors duration-200">
+                                        Continue Reading →
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     @endforeach
-
                 </div>
 
                 <div class="text-center mt-12" data-aos="fade-up">
@@ -109,7 +106,7 @@
                 </div>
             </div>
 
-            <aside class="w-full md:w-1/3 border-t border-gray-100 md:pl-4 md:sticky mt-10 md:mt-0 md:top-24 self-start h-[38rem]">
+            <aside class="w-full md:w-1/3 border-t border-gray-100 lg:pl-4 md:sticky mt-10 md:mt-0 md:top-24 self-start h-[38rem]">
                 <div class="flex items-center justify-between mb-10">
                     <h2 class="text-3xl font-bold text-gray-900" data-aos="fade-up">
                         You Might Also Like
@@ -129,19 +126,19 @@
                 </div>
 
                 @if ($randomNews->count() > 0)
-                    <div id="random-news-container" class="flex flex-col gap-6">
+                    <div id="random-news-container" class="flex flex-col gap-3 lg:gap-4">
                         @foreach ($randomNews as $randomItem)
                             <a href="{{ route('article', $randomItem->slug) }}" class="bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 overflow-hidden flex items-start gap-4 p-4 cursor-pointer hover:-translate-y-1">
-                                <div class="flex-shrink-0 w-28 h-20 overflow-hidden rounded-md">
-                                    <img src="{{ asset($randomItem->image) }}" alt="{{ $randomItem->title }}" class="w-full h-full object-cover">
+                                <div class="flex-shrink-0 w-28 h-20 sm:w-16 sm:h-12 lg:w-28 lg:h-20 overflow-hidden rounded-md">
+                                    <img src="{{ asset($randomItem->image) }}" alt="{{ $randomItem->title }}" class="lg:w-full lg:h-full object-cover">
                                 </div>
 
                                 <div class="flex flex-col justify-between flex-1">
                                     <div>
-                                        <h3 class="font-semibold text-base text-gray-900 leading-tight mb-1 line-clamp-2">
+                                        <h3 class="font-semibold text-base text-gray-900 leading-tight mb-1">
                                             {{ $randomItem->title }}
                                         </h3>
-                                        <p class="text-gray-600 text-sm line-clamp-2">
+                                        <p class="text-gray-600 text-sm line-clamp-2 sm:hidden lg:block">
                                             {{ Str::limit($randomItem->content, 80) }}
                                         </p>
                                     </div>
@@ -272,16 +269,16 @@
                     articleElement.style.transition = 'all 0.5s ease-out';
 
                     articleElement.innerHTML = `
-                        <div class="flex-shrink-0 w-28 h-20 overflow-hidden rounded-md">
-                            <img src="${image}" alt="${article.title}" class="w-full h-full object-cover">
+                        <div class="flex-shrink-0 w-28 h-20 sm:w-16 sm:h-12 lg:w-28 lg:h-20 overflow-hidden rounded-md">
+                            <img src="${image}" alt="${article.title}" class="lg:w-full lg:h-full object-cover">
                         </div>
 
                         <div class="flex flex-col justify-between flex-1">
                             <div>
-                                <h3 class="font-semibold text-base text-gray-900 leading-tight mb-1 line-clamp-2">
+                                <h3 class="font-semibold text-base text-gray-900 leading-tight mb-1">
                                     ${article.title}
                                 </h3>
-                                <p class="text-gray-600 text-sm line-clamp-2">
+                                <p class="text-gray-600 text-sm line-clamp-2 sm:hidden lg:block">
                                     ${article.content.substring(0, 80)}${article.content.length > 80 ? '...' : ''}
                                 </p>
                             </div>
