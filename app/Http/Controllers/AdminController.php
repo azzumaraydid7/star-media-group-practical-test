@@ -12,12 +12,23 @@ use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
 {
+    protected $log;
+
+    public function __construct()
+    {
+        $this->log = app('log');
+    }
+
     public function dashboard()
     {
-        $totalConsents = ConsentRecord::count();
-        $totalArticles = News::count();
-        $recentConsents = ConsentRecord::latest()->take(5)->get();
-        $recentArticles = News::latest()->take(5)->get();
+        try {
+            $totalConsents = ConsentRecord::count();
+            $totalArticles = News::count();
+            $recentConsents = ConsentRecord::latest()->take(5)->get();
+            $recentArticles = News::latest()->take(5)->get();
+        } catch (\Exception $e) {
+            $this->log->error($e);
+        }
         
         return view('admin.dashboard', compact('totalConsents', 'totalArticles', 'recentConsents', 'recentArticles'));
     }
@@ -90,8 +101,10 @@ class AdminController extends Controller
             return redirect()->route('admin.articles')->with('success', 'Article updated successfully');
 
         } catch (ValidationException $e) {
+            $this->log->error($e);
             return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
+            $this->log->error($e);
             return back()->with('error', 'Failed to update article: ' . $e->getMessage())->withInput();
         }
     }
@@ -140,8 +153,10 @@ class AdminController extends Controller
             return redirect()->route('admin.articles')->with('success', 'Article created successfully');
 
         } catch (ValidationException $e) {
+            $this->log->error($e);
             return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
+            $this->log->error($e);
             return back()->with('error', 'Failed to create article: ' . $e->getMessage())->withInput();
         }
     }
@@ -156,8 +171,8 @@ class AdminController extends Controller
                 'success' => true,
                 'message' => 'Article deleted successfully'
             ]);
-
         } catch (\Exception $e) {
+            $this->log->error($e);
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete article: ' . $e->getMessage()

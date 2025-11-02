@@ -127,6 +127,22 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'consent' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/consent.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+            'days' => 14,
+        ],
+
+        'news' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/news.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+            'days' => 14,
+        ],
+
     ],
 
 ];

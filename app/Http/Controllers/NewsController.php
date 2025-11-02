@@ -6,26 +6,38 @@ use Illuminate\Http\Request;
 use App\Models\News;
 use App\Models\Category;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
 {
+    protected $log;
+
+    public function __construct()
+    {
+        $this->log = Log::channel('news');
+    }
+
     /**
      * Display all published news articles with pagination.
      */
     public function allArticles(Request $request)
     {
-        $query = News::published()
-            ->with('category')
-            ->orderBy('published_at', 'desc')
-            ->orderBy('created_at', 'desc');
-
-        if ($request->has('category') && $request->category) {
-            $query->where('category_id', $request->category);
+        try {
+            $query = News::published()
+                ->with('category')
+                ->orderBy('published_at', 'desc')
+                ->orderBy('created_at', 'desc');
+    
+            if ($request->has('category') && $request->category) {
+                $query->where('category_id', $request->category);
+            }
+    
+            $articles = $query->paginate(12);
+            
+            $categories = Category::active()->orderBy('name')->get();
+        } catch (\Exception $e) {
+            $this->log->error($e);
         }
-
-        $articles = $query->paginate(12);
-        
-        $categories = Category::active()->orderBy('name')->get();
 
         return view('pages.articles', compact('articles', 'categories'));
     }
@@ -35,24 +47,28 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = News::published()
-            ->orderBy('published_at', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->skip(1)
-            ->take(6)
-            ->get();
+        try {
+            $news = News::published()
+                ->orderBy('published_at', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->skip(1)
+                ->take(6)
+                ->get();
 
-        $featuredArticle = News::published()
-            ->orderBy('published_at', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->first();
-        
-        $randomNews = News::published()
-            ->whereNotIn('id', $news->pluck('id'))
-            ->where('id', '!=', $featuredArticle?->id)
-            ->inRandomOrder()
-            ->take(3)
-            ->get();
+            $featuredArticle = News::published()
+                ->orderBy('published_at', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+            $randomNews = News::published()
+                ->whereNotIn('id', $news->pluck('id'))
+                ->where('id', '!=', $featuredArticle?->id)
+                ->inRandomOrder()
+                ->take(3)
+                ->get();
+        } catch (\Exception $e) {
+            $this->log->error($e);
+        }
 
         return view('pages.home', compact('news', 'featuredArticle', 'randomNews'));
     }
@@ -62,16 +78,20 @@ class NewsController extends Controller
      */
     public function show($slug)
     {
-        $article = News::published()
-            ->where('slug', $slug)
-            ->firstOrFail();
+        try {
+            $article = News::published()
+                ->where('slug', $slug)
+                ->firstOrFail();
 
-        $relatedArticles = News::published()
-            ->where('id', '!=', $article->id)
-            ->orderBy('published_at', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->limit(4)
-            ->get();
+            $relatedArticles = News::published()
+                ->where('id', '!=', $article->id)
+                ->orderBy('published_at', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->limit(4)
+                ->get();
+        } catch (\Exception $e) {
+            $this->log->error($e);
+        }
 
         return view('pages.article', compact('article', 'relatedArticles'));
     }
@@ -81,10 +101,14 @@ class NewsController extends Controller
      */
     public function api()
     {
-        $news = News::published()
-            ->orderBy('published_at', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        try {
+            $news = News::published()
+                ->orderBy('published_at', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } catch (\Exception $e) {
+            $this->log->error($e);
+        }
 
         return response()->json($news);
     }
@@ -94,29 +118,33 @@ class NewsController extends Controller
      */
     public function randomNews(Request $request)
     {
-        $topNewsIds = News::published()
-            ->orderBy('published_at', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->take(7)
-            ->pluck('id')->toArray();
-        
-        $excludeIds = [];
-        if ($request->has('exclude')) {
-            $excludeIds = explode(',', $request->get('exclude'));
-            $excludeIds = array_filter($excludeIds, 'is_numeric');
-        }
-        
-        $allExcludeIds = array_merge($topNewsIds, $excludeIds);
-        
-        $randomNews = News::published()
-            ->whereNotIn('id', $allExcludeIds)
-            ->inRandomOrder()
-            ->take(3)
-            ->get();
+        try {
+            $topNewsIds = News::published()
+                ->orderBy('published_at', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->take(7)
+                ->pluck('id')->toArray();
+            
+            $excludeIds = [];
+            if ($request->has('exclude')) {
+                $excludeIds = explode(',', $request->get('exclude'));
+                $excludeIds = array_filter($excludeIds, 'is_numeric');
+            }
+            
+            $allExcludeIds = array_merge($topNewsIds, $excludeIds);
+            
+            $randomNews = News::published()
+                ->whereNotIn('id', $allExcludeIds)
+                ->inRandomOrder()
+                ->take(3)
+                ->get();
 
-        $randomNews->each(function ($article) {
-            $article->published_at_human = $article->published_at->diffForHumans();
-        });
+            $randomNews->each(function ($article) {
+                $article->published_at_human = $article->published_at->diffForHumans();
+            });
+        } catch (\Exception $e) {
+            $this->log->error($e);
+        }
 
         return response()->json($randomNews);
     }
@@ -126,27 +154,31 @@ class NewsController extends Controller
      */
     public function relatedArticles(Request $request, $slug)
     {
-        $article = News::published()
-            ->where('slug', $slug)
-            ->firstOrFail();
+        try {
+            $article = News::published()
+                ->where('slug', $slug)
+                ->firstOrFail();
 
-        $excludeIds = [$article->id];
+            $excludeIds = [$article->id];
 
-        if ($request->has('exclude')) {
-            $previousIds = explode(',', $request->get('exclude'));
-            $previousIds = array_filter($previousIds, 'is_numeric');
-            $excludeIds = array_merge($excludeIds, $previousIds);
+            if ($request->has('exclude')) {
+                $previousIds = explode(',', $request->get('exclude'));
+                $previousIds = array_filter($previousIds, 'is_numeric');
+                $excludeIds = array_merge($excludeIds, $previousIds);
+            }
+
+            $relatedArticles = News::published()
+                ->whereNotIn('id', $excludeIds)
+                ->inRandomOrder()
+                ->limit(4)
+                ->get();
+            
+            $relatedArticles->each(function ($article) {
+                $article->published_at_human = $article->published_at->diffForHumans();
+            });
+        } catch (\Exception $e) {
+            $this->log->error($e);
         }
-
-        $relatedArticles = News::published()
-            ->whereNotIn('id', $excludeIds)
-            ->inRandomOrder()
-            ->limit(4)
-            ->get();
-        
-        $relatedArticles->each(function ($article) {
-            $article->published_at_human = $article->published_at->diffForHumans();
-        });
 
         return response()->json($relatedArticles);
     }
@@ -156,15 +188,18 @@ class NewsController extends Controller
      */
     public function bottomHeadlines()
     {
-        $latestHeadlines = News::published()
-            ->with('category')
-            ->orderBy('published_at', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->take(5)
-            ->get();
+        try {
+            $latestHeadlines = News::published()
+                ->with('category')
+                ->orderBy('published_at', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get();
+        } catch (\Exception $e) {
+            $this->log->error($e);
+        }
 
-        return response(view('includes.bottom-headlines', compact('latestHeadlines'))->render())
-            ->header('Content-Type', 'text/html');
+        return response(view('includes.bottom-headlines', compact('latestHeadlines'))->render())->header('Content-Type', 'text/html');
     }
 
     /**
@@ -176,6 +211,7 @@ class NewsController extends Controller
             Artisan::call('db:seed');
             return redirect()->back()->with('success', 'Database seeded successfully!');
         } catch (\Exception $e) {
+            $this->log->error($e);
             return redirect()->back()->with('error', 'Failed to seed database: ' . $e->getMessage());
         }
     }

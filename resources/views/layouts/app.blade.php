@@ -36,10 +36,8 @@
     <meta name="theme-color" content="#0F172A">
 
     <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;500;700&display=swap" rel="stylesheet">
-
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
         .consent-overlay {

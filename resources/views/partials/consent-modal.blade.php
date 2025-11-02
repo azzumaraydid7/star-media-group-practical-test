@@ -40,7 +40,11 @@
             const current = window.location.pathname.replace(/\/+$/, '');
 
             if (noShowPages.some(path => current.endsWith(path))) {
-                return false;
+                return {
+                    visible: false,
+                    initialized: false,
+                    loading: true,
+                };
             }
 
             return {
@@ -453,8 +457,8 @@
                 }));
             }
 
-            const consentModal = document.getElementById('consent-modal');
-            if (consentModal) {
+            const consentModalContainer = document.getElementById('consent-modal');
+            if (consentModalContainer) {
                 initializeAlpineData();
             } else {
                 createConsentModal();

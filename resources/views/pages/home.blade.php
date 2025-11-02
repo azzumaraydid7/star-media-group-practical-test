@@ -6,7 +6,11 @@
             <div class="grid md:grid-cols-2 gap-10 items-center">
                 <div data-aos="fade-right">
                     @if ($featuredArticle)
-                        <img src="{{ asset($featuredArticle->image) }}" alt="{{ $featuredArticle->title }}" class="rounded-2xl shadow-xl aspect-video object-cover">
+                        @if($featuredArticle->image && file_exists(public_path($featuredArticle->image)))
+                            <img src="{{ asset($featuredArticle->image) }}" alt="{{ $featuredArticle->title }}" class="rounded-2xl shadow-xl aspect-video object-cover">
+                        @else
+                            <img src="{{ asset('img/default.png') }}" alt="Default Image" class="rounded-2xl shadow-xl aspect-video object-cover">
+                        @endif
                     @else
                         <img src="{{ asset('img/3572927.jpg') }}" alt="Headline Image" class="rounded-2xl shadow-xl aspect-video object-cover">
                     @endif

@@ -33,6 +33,8 @@
             </form>
         </div>
     </div>
+@endsection
+@push('scripts')
     <script>
         function togglePasswordVisibility(fieldName) {
             const passwordField = document.getElementsByName(fieldName)[0];
@@ -43,4 +45,4 @@
             }
         }
     </script>
-@endsection
+@endpush
