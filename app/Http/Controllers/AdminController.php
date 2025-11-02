@@ -39,10 +39,20 @@ class AdminController extends Controller
         return view('admin.consents', compact('records'));
     }
 
-    public function articles()
+    public function articles(Request $request)
     {
-        $articles = News::latest()->paginate(15);
-        return view('admin.articles', compact('articles'));
+        $query = News::latest();
+
+        if ($request->filled('q')) {
+            $q = trim($request->get('q'));
+            $query->where(function ($w) use ($q) {
+                $w->where('title', 'like', "%{$q}%")
+                    ->orWhere('author', 'like', "%{$q}%");
+            });
+        }
+
+        $articles = $query->paginate(15)->appends($request->only('q'));
+        return view('admin.articles.index', compact('articles'));
     }
 
     public function editArticle($id)

@@ -3,7 +3,7 @@
 @section('title', 'Edit Article')
 
 @section('header')
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between pt-16">
         <div>
             <h2 class="text-3xl font-bold text-gray-800">Edit Article</h2>
             <p class="text-gray-600">Update article information</p>
@@ -184,8 +184,8 @@
             </div>
 
             <!-- Form Actions -->
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between">
-                <div class="flex space-x-3">
+            <div class="grid grid-cols-2 gap-3 px-6 py-4 bg-gray-50 border-t border-gray-200 text-sm">
+                <div class="grid grid-cols-1 lg:flex gap-3">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors">
                         <i class="fas fa-save mr-2"></i>Update Article
                     </button>
@@ -193,9 +193,11 @@
                         <i class="fas fa-eye mr-2"></i>Preview
                     </a>
                 </div>
-                <a href="{{ route('admin.articles') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md font-medium transition-colors">
-                    Cancel
-                </a>
+                <div class="flex justify-end h-fit">
+                    <a href="{{ route('admin.articles') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md font-medium transition-colors">
+                        Cancel
+                    </a>
+                </div>
             </div>
         </form>
     </div>

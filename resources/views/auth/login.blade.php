@@ -27,7 +27,8 @@
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                        onclick="this.disabled=true; this.innerText='Logging in...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();">
                     Login
                 </button>
             </form>
