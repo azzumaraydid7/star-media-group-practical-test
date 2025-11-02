@@ -3,7 +3,7 @@
 @section('title', 'Articles Management')
 
 @section('header')
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center pt-16">
         <div>
             <h2 class="text-3xl font-bold text-gray-800">Articles Management</h2>
             <p class="text-gray-600">Manage your news articles</p>

@@ -3,8 +3,9 @@
 @section('title', 'Admin Dashboard')
 
 @section('header')
-    <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>
-    <p class="text-gray-600">Welcome to your admin dashboard</p>
+    <div class="pt-16">
+        <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>
+    </div>
 @endsection
 
 @section('content')
@@ -103,8 +104,8 @@
                     <div class="space-y-4">
                         @foreach($recentArticles as $article)
                             <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
-                                <div>
-                                    <p class="font-medium text-gray-800">{{ Str::limit($article->title, 40) }}</p>
+                                <div class="truncate">
+                                    <p class="font-medium text-gray-800 whitespace-nowrap truncate">{{ $article->title }}</p>
                                     <p class="text-sm text-gray-600">
                                         @if($article->is_featured)
                                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
@@ -113,8 +114,9 @@
                                         @endif
                                     </p>
                                 </div>
-                                <div class="text-right">
-                                    <p class="text-sm text-gray-600">{{ Carbon\Carbon::parse($article->created_at)->format('d M Y') }}</p>
+                                <div class="text-right pl-2">
+                                    <p class="text-sm text-gray-600 whitespace-nowrap">{{ Carbon\Carbon::parse($article->created_at)->format('d M Y') }}</p>
+                                    <p class="text-sm text-gray-600 whitespace-nowrap">{{ Carbon\Carbon::parse($article->created_at)->format('h:i A') }}</p>
                                 </div>
                             </div>
                         @endforeach

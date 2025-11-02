@@ -3,7 +3,7 @@
 @section('title', 'Consents Management')
 
 @section('header')
-    <div>
+    <div class="pt-16">
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Consents Management</h2>
         <p class="text-gray-600 text-sm sm:text-base">Manage user consent records</p>
     </div>
@@ -58,7 +58,7 @@
                                 </td>
                                 <td class="px-3 sm:px-6 py-4">
                                     <span class="accepted-display text-sm text-gray-900">{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('h:i A - d M Y') : '' }}</span>
-                                    <input type="datetime-local" class="accepted-edit hidden w-full px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('h:i A - d M Y') : '' }}">
+                                    <input type="datetime-local" class="accepted-edit hidden w-full px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('Y-m-d\TH:i') : '' }}">
                                 </td>
                                 <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
                                     <span class="version-display text-sm text-gray-900">{{ $record->version }}</span>
