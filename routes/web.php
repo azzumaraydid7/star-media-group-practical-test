@@ -30,9 +30,11 @@ Route::get('/article/{slug}', [NewsController::class, 'show'])->name('article');
 
 Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');
 
-Route::post('/consent/accept', [ConsentController::class, 'accept'])->name('consent.accept');
-Route::post('/consent/decline', [ConsentController::class, 'decline'])->name('consent.decline');
-Route::post('/consent/validate', [ConsentController::class, 'validate'])->name('consent.validate');
+Route::group(['prefix' => 'consent'], function () {
+    Route::post('/accept', [ConsentController::class, 'accept'])->name('consent.accept');
+    Route::post('/decline', [ConsentController::class, 'decline'])->name('consent.decline');
+    Route::post('/validate', [ConsentController::class, 'validate'])->name('consent.validate');
+});
 
 Route::get('/run-seed', [NewsController::class, 'runSeed'])->name('run.seed');
 
@@ -40,17 +42,19 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware(['admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/admin/consents', [ConsentController::class, 'consents'])->name('admin.consents');
-    Route::put('/admin/consents/{id}', [ConsentController::class, 'updateConsent'])->name('admin.consents.update');
-    Route::delete('/admin/consents/{id}', [ConsentController::class, 'deleteConsent'])->name('admin.consents.delete');
-    Route::get('/admin/articles', [AdminController::class, 'articles'])->name('admin.articles');
-    Route::get('/admin/articles/create', [AdminController::class, 'createArticle'])->name('admin.articles.create');
-    Route::post('/admin/articles', [AdminController::class, 'storeArticle'])->name('admin.articles.store');
-    Route::get('/admin/articles/{id}/edit', [AdminController::class, 'editArticle'])->name('admin.articles.edit');
-    Route::put('/admin/articles/{id}', [AdminController::class, 'updateArticle'])->name('admin.articles.update');
-    Route::delete('/admin/articles/{id}', [AdminController::class, 'deleteArticle'])->name('admin.articles.delete');
+Route::group(['prefix' => 'admin'], function () {
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/consents', [ConsentController::class, 'consents'])->name('admin.consents');
+        Route::put('/consents/{id}', [ConsentController::class, 'updateConsent'])->name('admin.consents.update');
+        Route::delete('/consents/{id}', [ConsentController::class, 'deleteConsent'])->name('admin.consents.delete');
+        Route::get('/articles', [AdminController::class, 'articles'])->name('admin.articles');
+        Route::get('/articles/create', [AdminController::class, 'createArticle'])->name('admin.articles.create');
+        Route::post('/articles', [AdminController::class, 'storeArticle'])->name('admin.articles.store');
+        Route::get('/articles/{id}/edit', [AdminController::class, 'editArticle'])->name('admin.articles.edit');
+        Route::put('/articles/{id}', [AdminController::class, 'updateArticle'])->name('admin.articles.update');
+        Route::delete('/articles/{id}', [AdminController::class, 'deleteArticle'])->name('admin.articles.delete');
+    });
 });
 
 Route::post('/ai/generate-title', [App\Http\Controllers\AiController::class, 'generateTitle'])->name('ai.generate.title');

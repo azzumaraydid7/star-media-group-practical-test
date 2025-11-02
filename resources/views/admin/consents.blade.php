@@ -23,70 +23,45 @@
 
         @if ($records->count() > 0)
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                ID
-                            </th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                GUID
-                            </th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Accepted At
-                            </th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Version
-                            </th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
-                                IP Address
-                            </th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($records as $record)
-                            <tr id="record-{{ $record->id }}">
-                                <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $record->id }}
-                                </td>
-                                <td class="px-3 sm:px-6 py-4">
-                                    <span class="guid-display text-sm text-gray-900 break-all">{{ $record->guid }}</span>
-                                    <input type="text" class="guid-edit hidden w-full px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->guid }}">
-                                </td>
-                                <td class="px-3 sm:px-6 py-4">
-                                    <span class="accepted-display text-sm text-gray-900">{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('h:i A - d M Y') : '' }}</span>
-                                    <input type="datetime-local" class="accepted-edit hidden w-full px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('Y-m-d\TH:i') : '' }}">
-                                </td>
-                                <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                                    <span class="version-display text-sm text-gray-900">{{ $record->version }}</span>
-                                    <input type="number" class="version-edit hidden w-full px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->version }}">
-                                </td>
-                                <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden sm:table-cell">
-                                    {{ $record->ip }}
-                                </td>
-                                <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex space-x-1 sm:space-x-2">
-                                        <button onclick="editRecord({{ $record->id }})" class="edit-btn text-indigo-600 hover:text-indigo-900 p-1" title="Edit">
-                                            <i class="fas fa-edit text-sm"></i>
-                                        </button>
-                                        <button onclick="saveRecord({{ $record->id }})" class="save-btn hidden text-green-600 hover:text-green-900 p-1" title="Save">
-                                            <i class="fas fa-save text-sm"></i>
-                                        </button>
-                                        <button onclick="cancelEdit({{ $record->id }})" class="cancel-btn hidden text-gray-600 hover:text-gray-900 p-1" title="Cancel">
-                                            <i class="fas fa-times text-sm"></i>
-                                        </button>
-                                        <button onclick="deleteRecord({{ $record->id }})" class="text-red-600 hover:text-red-900 p-1" title="Delete">
-                                            <i class="fas fa-trash text-sm"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                @foreach ($records as $record)
+                    <div id="record-{{ $record->id }}">
+
+                        <!-- DESKTOP TABLE ROW -->
+                        <table class="min-w-full divide-y divide-gray-200 hidden sm:table">
+                            <tbody>
+                                <tr>
+                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $record->id }}
+                                    </td>
+                                    <td class="px-3 sm:px-6 py-4">
+                                        <span class="guid-display text-sm text-gray-900 break-all">{{ $record->guid }}</span>
+                                        <input type="text" name="guid" class="guid-edit hidden w-full px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->guid }}">
+                                    </td>
+                                    <td class="px-3 sm:px-6 py-4">
+                                        <span class="accepted-display text-sm text-gray-900">{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('h:i A - d M Y') : '' }}</span>
+                                        <input type="datetime-local" name="accepted_at" class="accepted-edit hidden w-full px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('Y-m-d\TH:i') : '' }}">
+                                    </td>
+                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                                        <span class="version-display text-sm text-gray-900">{{ $record->version }}</span>
+                                        <input type="number" name="version" class="version-edit hidden w-10 px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->version }}">
+                                    </td>
+                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden sm:table-cell">
+                                        {{ $record->ip }}
+                                    </td>
+                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        @include('admin.includes.consent-button-actions', ['record' => $record])
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- MOBILE CARD VIEW -->
+                        <div class="sm:hidden px-3 sm:px-6 py-4 border-b border-gray-200 space-y-2">
+                            @include('admin.mobile.consent-record', ['record' => $record])
+                        </div>
+
+                    </div>
+                @endforeach
             </div>
 
             <!-- Pagination -->
@@ -110,9 +85,9 @@
             row.querySelectorAll('.guid-display, .accepted-display, .version-display').forEach(el => el.classList.add('hidden'));
             row.querySelectorAll('.guid-edit, .accepted-edit, .version-edit').forEach(el => el.classList.remove('hidden'));
 
-            row.querySelector('.edit-btn').classList.add('hidden');
-            row.querySelector('.save-btn').classList.remove('hidden');
-            row.querySelector('.cancel-btn').classList.remove('hidden');
+            row.querySelectorAll('.edit-btn').forEach(el => el.classList.add('hidden'));
+            row.querySelectorAll('.save-btn').forEach(el => el.classList.remove('hidden'));
+            row.querySelectorAll('.cancel-btn').forEach(el => el.classList.remove('hidden'));
         }
 
         function cancelEdit(id) {
@@ -121,79 +96,106 @@
             row.querySelectorAll('.guid-display, .accepted-display, .version-display').forEach(el => el.classList.remove('hidden'));
             row.querySelectorAll('.guid-edit, .accepted-edit, .version-edit').forEach(el => el.classList.add('hidden'));
 
-            row.querySelector('.edit-btn').classList.remove('hidden');
-            row.querySelector('.save-btn').classList.add('hidden');
-            row.querySelector('.cancel-btn').classList.add('hidden');
+            row.querySelectorAll('.edit-btn').forEach(el => el.classList.remove('hidden'));
+            row.querySelectorAll('.save-btn').forEach(el => el.classList.add('hidden'));
+            row.querySelectorAll('.cancel-btn').forEach(el => el.classList.add('hidden'));
+        }
+
+        // Helper to get the visible element among potentially duplicated inputs (desktop/mobile views)
+        function getVisibleElement(root, selector) {
+            const elements = root.querySelectorAll(selector);
+            for (const el of elements) {
+                const style = window.getComputedStyle(el);
+                const isVisible = style.visibility !== 'hidden' && style.display !== 'none' && el.offsetWidth > 0 && el.offsetHeight > 0 && el.offsetParent !== null;
+                if (isVisible) {
+                    return el;
+                }
+            }
+            return elements[0] || null;
         }
 
         function saveRecord(id) {
             const row = document.getElementById(`record-${id}`);
-            const guid = row.querySelector('.guid-edit').value;
-            const acceptedAt = row.querySelector('.accepted-edit').value;
-            const version = row.querySelector('.version-edit').value;
+
+            const guidInput = getVisibleElement(row, '.guid-edit');
+            const acceptedInput = getVisibleElement(row, '.accepted-edit');
+            const versionInput = getVisibleElement(row, '.version-edit');
+
+            const guid = guidInput ? guidInput.value : '';
+            const acceptedAt = acceptedInput ? acceptedInput.value : '';
+            const versionValue = versionInput ? versionInput.value : '';
+            const version = versionValue !== '' ? parseInt(versionValue, 10) : null;
 
             fetch(`/admin/consents/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    guid: guid,
-                    accepted_at: acceptedAt,
-                    version: parseInt(version)
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        guid: guid,
+                        accepted_at: acceptedAt,
+                        version: version
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    row.querySelector('.guid-display').textContent = guid;
-                    
-                    if (acceptedAt) {
-                        const date = new Date(acceptedAt);
-                        const options = {
-                            hour: 'numeric',
-                            minute: '2-digit',
-                            hour12: true,
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric'
-                        };
-                        const time = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-                        const dateStr = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-                        const formattedDate = `${time} - ${dateStr}`;
-                        row.querySelector('.accepted-display').textContent = formattedDate;
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        row.querySelectorAll('.guid-display').forEach(el => el.textContent = guid);
+
+                        if (acceptedAt) {
+                            const date = new Date(acceptedAt);
+                            const options = {
+                                hour: 'numeric',
+                                minute: '2-digit',
+                                hour12: true,
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric'
+                            };
+                            const time = date.toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                            });
+                            const dateStr = date.toLocaleDateString('en-GB', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric'
+                            });
+                            const formattedDate = `${time} - ${dateStr}`;
+                            row.querySelectorAll('.accepted-display').forEach(el => el.textContent = formattedDate);
+                        } else {
+                            row.querySelectorAll('.accepted-display').forEach(el => el.textContent = 'Not accepted');
+                        }
+
+                        row.querySelectorAll('.version-display').forEach(el => el.textContent = version);
+
+                        cancelEdit(id);
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Record updated successfully',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
                     } else {
-                        row.querySelector('.accepted-display').textContent = 'Not accepted';
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: data.message || 'Failed to update record'
+                        });
                     }
-                    
-                    row.querySelector('.version-display').textContent = version;
-
-                    cancelEdit(id);
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Record updated successfully',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                } else {
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: data.message || 'Failed to update record'
+                        text: 'An error occurred while updating the record'
                     });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'An error occurred while updating the record'
                 });
-            });
         }
 
         function deleteRecord(id) {
