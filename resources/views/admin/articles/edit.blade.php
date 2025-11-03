@@ -8,10 +8,6 @@
             <h2 class="text-3xl font-bold text-gray-800">Edit Article</h2>
             <p class="text-gray-600">Update article information</p>
         </div>
-        <a href="{{ route('admin.articles') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
-            <i class="fas fa-arrow-left mr-2"></i>
-            Back to Articles
-        </a>
     </div>
 @endsection
 
@@ -19,6 +15,13 @@
     <!-- Quill Rich Text Editor CSS -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+    <div class="flex justify-end mb-4">
+        <a href="{{ route('admin.articles') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to Articles
+        </a>
+    </div>
 
     <!-- Edit Form -->
     <div class="bg-white rounded-lg shadow-lg">
