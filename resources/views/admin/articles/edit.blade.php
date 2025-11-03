@@ -189,7 +189,7 @@
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors">
                         <i class="fas fa-save mr-2"></i>Update Article
                     </button>
-                    <a href="{{ route('article', $article->slug) }}" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-medium transition-colors">
+                    <a href="{{ route('article', $article->slug) }}" target="_blank" class="text-center bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-medium transition-colors">
                         <i class="fas fa-eye mr-2"></i>Preview
                     </a>
                 </div>

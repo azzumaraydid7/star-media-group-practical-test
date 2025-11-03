@@ -3,7 +3,7 @@
 @section('title', 'Login')
 
 @section('content')
-    <div class="container py-40">
+    <div class="container flex items-center min-h-screen mx-auto -translate-y-10">
         <div class="bg-white shadow-md rounded-lg p-8 mx-auto w-full max-w-sm">
             <h2 class="text-2xl font-bold mb-4 text-center">Admin Login</h2>
 

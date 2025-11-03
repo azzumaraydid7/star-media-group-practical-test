@@ -69,20 +69,19 @@
                             <img src="{{ asset($newsItem->image) }}" class="w-full aspect-video object-cover">
                             <div class="p-3 lg:p-6">
                                 <div class="lg:flex items-center justify-between mb-3">
-                                    <h3 class="font-semibold lg:text-xl text-gray-900 pb-3 lg:pb-0">{{ $newsItem->title }}</h3>
+                                    <h3 class="font-semibold text-sm lg:text-xl text-gray-900 pb-3 lg:pb-0">{{ $newsItem->title }}</h3>
                                     <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full flex-shrink-0 lg:ml-3">
                                         {{ $featuredArticle->published_at->diffForHumans() }}
                                     </span>
                                 </div>
 
-                                <p class="text-gray-600 line-clamp-2 lg:line-clamp-3" x-show="selected !== {{ $index }}">
+                                <p class="text-gray-600 line-clamp-2 lg:line-clamp-3 text-xs lg:text-base" x-show="selected !== {{ $index }}">
                                     {{ $newsItem->content }}
                                 </p>
 
                                 <div x-show="selected === {{ $index }}" x-transition>
-                                    <p class="text-gray-700 mt-3 leading-relaxed">
-                                        {{ $newsItem->content }} Read more insights from experts worldwide
-                                        on how these trends redefine the global landscape.
+                                    <p class="text-gray-700 mt-3 leading-relaxed text-xs lg:text-base">
+                                        {{ $newsItem->content }}
                                     </p>
                                     <a href="{{ route('article', $newsItem->slug) }}" class="inline-block mt-4 text-blue-600 font-semibold hover:underline transition-colors duration-200">
                                         Continue Reading →
@@ -135,10 +134,10 @@
 
                                 <div class="flex flex-col justify-between flex-1">
                                     <div>
-                                        <h3 class="font-semibold text-base text-gray-900 leading-tight mb-1">
+                                        <h3 class="font-semibold text-sm lg:text-xl text-gray-900 leading-tight mb-1">
                                             {{ $randomItem->title }}
                                         </h3>
-                                        <p class="text-gray-600 text-sm line-clamp-2 sm:hidden lg:block">
+                                        <p class="text-gray-600 text-xs sm:text-sm line-clamp-2 sm:hidden xl:block">
                                             {{ Str::limit($randomItem->content, 80) }}
                                         </p>
                                     </div>
@@ -275,10 +274,10 @@
 
                         <div class="flex flex-col justify-between flex-1">
                             <div>
-                                <h3 class="font-semibold text-base text-gray-900 leading-tight mb-1">
+                                <h3 class="font-semibold text-sm lg:text-xl text-gray-900 leading-tight mb-1">
                                     ${article.title}
                                 </h3>
-                                <p class="text-gray-600 text-sm line-clamp-2 sm:hidden lg:block">
+                                <p class="text-gray-600 text-xs sm:text-sm line-clamp-2 sm:hidden xl:block">
                                     ${article.content.substring(0, 80)}${article.content.length > 80 ? '...' : ''}
                                 </p>
                             </div>
