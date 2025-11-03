@@ -145,11 +145,16 @@ class ConsentController extends Controller
                 'version' => 'required|integer|min:1'
             ]);
 
-            $record->update([
+            $data = [
                 'guid' => $request->guid,
-                'accepted_at' => $request->accepted_at,
-                'version' => $request->version
-            ]);
+                'version' => $request->version,
+            ];
+
+            if ($request->accepted_at !== $record->accepted_at) {
+                $data['accepted_at'] = $request->accepted_at;
+            }
+
+            $record->update($data);
 
             return response()->json(['success' => true, 'message' => 'Consent updated successfully']);
         } catch (\Exception $e) {

@@ -39,7 +39,7 @@
                                     </td>
                                     <td class="px-3 sm:px-6 py-4">
                                         <span class="accepted-display text-sm text-gray-900">{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('h:i A - d M Y') : '' }}</span>
-                                        <input type="datetime-local" name="accepted_at" class="accepted-edit hidden w-full px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('Y-m-d\TH:i') : '' }}">
+                                        <input type="datetime-local" step="1" name="accepted_at" class="accepted-edit hidden w-full px-2 py-1 text-sm border border-gray-300 rounded" value="{{ $record->accepted_at ? Carbon\Carbon::parse($record->accepted_at)->format('Y-m-d\TH:i:s') : '' }}">
                                     </td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
                                         <span class="version-display text-sm text-gray-900">{{ $record->version }}</span>
